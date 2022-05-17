@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRef } from "react";
 import { Latex } from "../components/Latex";
 
@@ -16,6 +17,9 @@ export default function HomePage() {
 
   return (
     <div className="max-w-2xl text-base sm:text-lg leading-relaxed mx-auto p-8 text-gray-900 relative text-justify">
+      <Head>
+        <title>What is a sequence? | Clown School</title>
+      </Head>
       <h1 className="font-bold text-4xl sm:text-5xl mb-2 text-left">
         What is a sequence?
       </h1>
