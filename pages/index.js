@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Latex } from "../components/latex";
+import { Latex } from "../components/Latex";
 
 export default function HomePage() {
   const sequenceScrollRef = useRef(null);
