@@ -75,8 +75,8 @@ export default function HomePage() {
         displayMode={true}
       />
       <p>
-        Since each natural number corresponds to a term in the pizza sequence,
-        we say that our sequence is “indexed by” the natural numbers.
+        Since each natural number corresponds with a term in the pizza sequence,
+        we say that this sequence is "indexed by" the natural numbers.
       </p>
       <Aside>
         <p>
@@ -93,15 +93,15 @@ export default function HomePage() {
         Notation for Sequences
       </h2>
       <p className="mb-3">
-        You can think of a sequence like a function that assigns a value to each
-        natural number. For example, our pizza sequence is a little bit like the
-        function <Latex value={String.raw`f(n) = \frac{n}{n + 1}`} />. (Because
+        A sequence is very similar to a function. For example, our pizza
+        sequence is a little bit like the function{" "}
+        <Latex value={String.raw`f(n) = \frac{n}{n + 1}`} />. (Because
         <Latex value={String.raw`f(1) = \frac 12`} />,{" "}
         <Latex value={String.raw`f(2) = \frac 23`} />, and so on.)
       </p>
       <p className="mb-3">
         But we don't generally use function notation for sequences. Instead, we
-        would write it like this:
+        write them like this:
         <Latex
           value={String.raw`\left(\frac{n}{n+1}\right)_{n \in \mathbb{N}}`}
           displayMode={true}
@@ -109,7 +109,7 @@ export default function HomePage() {
         This notation basically means "compute{" "}
         <Latex value={String.raw`\frac{n}{n + 1}`} /> for all{" "}
         <Latex value="n" /> in <Latex value={String.raw`\mathbb{N}`} />
-        ". Which makes sense! That's exactly what our sequence is.
+        ". Which makes sense, because that's exactly what our pizza sequence is.
       </p>
       <p className="mb-3">
         But sometimes we don't know exactly what our sequence is. When writing
