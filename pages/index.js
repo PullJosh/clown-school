@@ -1,6 +1,8 @@
 import Head from "next/head";
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { Latex } from "../components/Latex";
+import { MathInput } from "../components/MathInput";
+import evaluatex from "evaluatex/dist/evaluatex";
 
 export default function HomePage() {
   const sequenceScrollRef = useRef(null);
@@ -15,13 +17,24 @@ export default function HomePage() {
     }
   };
 
+  const [customSequenceValue, setCustomSequenceValue] = useState(
+    String.raw`\frac{n}{n+1}`
+  );
+
+  let customSequenceFn;
+  try {
+    customSequenceFn = evaluatex(customSequenceValue, {}, { latex: true });
+  } catch (e) {
+    customSequenceFn = null;
+  }
+
   return (
     <div className="max-w-2xl text-base sm:text-lg leading-relaxed mx-auto p-8 text-gray-900 relative text-justify">
       <Head>
-        <title>What is a sequence? | Clown School</title>
+        <title>What is a Sequence? | Clown School</title>
       </Head>
       <h1 className="font-bold text-4xl sm:text-5xl mb-2 text-left">
-        What is a sequence?
+        What is a Sequence?
       </h1>
       <div className="italic text-gray-600 mb-6">
         tl;dr: A sequence is an infinitely long list of numbers.
@@ -129,9 +142,9 @@ export default function HomePage() {
       <p className="mb-3">
         But sometimes we don't know exactly what our sequence is. When writing
         proofs, we will often discuss{" "}
-        <span className="text-indigo-800 font-semibold">
-          🎩 mystery sequences
-        </span>
+        <strong className="text-indigo-800 font-semibold">
+          mystery sequences
+        </strong>
         , where we know some <i>properties</i> of the sequence but not its exact
         values. In that case, we can't write an exact formula for the terms, so
         we just write
@@ -160,9 +173,64 @@ export default function HomePage() {
         It is much easier to understand the behavior of a sequence if you have a
         graph:
       </p>
-      <div className="relative select-none">
-        <div className="relative my-3 shadow-inner border bg-gray-50 rounded-lg overflow-hidden">
-          <PizzaSequenceGraph />
+      <div className="relative select-none my-5">
+        <div className="relative shadow-inner border bg-gray-50 rounded-lg overflow-x-auto">
+          <PizzaSequenceGraph width={4565} />
+        </div>
+        <div className="absolute -top-4 right-4 bg-white border shadow-sm rounded px-3 py-2">
+          <Latex value="\left( \frac{n}{n+1} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}" />
+        </div>
+      </div>
+      <p className="mb-3">
+        It looks like the terms of this sequence get closer and closer to 1 as{" "}
+        <Latex value="\textcolor{#1d4ed8}{n}" /> gets larger. This concept of{" "}
+        <strong className="text-orange-800 font-semibold">
+          converging to a value
+        </strong>{" "}
+        is essential in analysis, so keep your eyes peeled for graphs that look
+        like this.
+      </p>
+      <Aside>
+        It makes sense that the sequence converges to 1, because for large{" "}
+        <Latex value="\textcolor{#1d4ed8}{n}" />, the terms become fractions
+        like <Latex value="\frac{999,999}{1,000,000}" />, which is pretty much
+        1.
+      </Aside>
+      <h2 className="font-bold text-2xl sm:text-3xl mt-10 mb-2 text-left">
+        Sequence Gallery
+      </h2>
+      <p>
+        The best way to become familiar with sequences is to look at a lot of
+        them. The following gallery contains a selection of interesting
+        sequences:
+      </p>
+      <div className="border-4 bg-gray-50 border-dashed rounded px-8 py-4 text-center italic my-3">
+        Coming soon ;)
+      </div>
+      <p>
+        If you had to classify these sequences into categories, how might you
+        divide them up? (In the next section, we will discuss one way that
+        mathematicians classify sequences.)
+      </p>
+      <h2 className="font-bold text-2xl sm:text-3xl mt-10 mb-2 text-left">
+        Build Your Own Sequence
+      </h2>
+      <p>
+        Of course! I can't show you all these examples without giving you the
+        chance to build a sequence of your own.
+      </p>
+      <div className="relative select-none my-5">
+        <div className="relative shadow-inner border bg-gray-50 rounded-lg overflow-x-auto">
+          <SequenceGraph
+            width={4565}
+            fn={customSequenceFn ? (n) => customSequenceFn({ n }) : undefined}
+          />
+        </div>
+        <div className="absolute -top-4 right-4 bg-white border shadow-sm rounded px-3 py-2">
+          <MathInput
+            defaultValue={customSequenceValue}
+            onChange={(newValue) => setCustomSequenceValue(newValue)}
+          />
         </div>
       </div>
     </div>
@@ -177,6 +245,123 @@ function Aside({ children }) {
       </h5>
       {children}
     </div>
+  );
+}
+
+function SequenceGraph({ width = 606, height = 300, fn, children }) {
+  const originX = 40;
+  const originY = 260;
+  const scaleX = 45;
+  const scaleY = 220;
+
+  const nValues = [...new Array(Math.ceil((width - originX) / scaleX))].map(
+    (_, i) => i + 1
+  );
+
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} style={{ width, height }}>
+      {[...new Array(4)].map((_, i) => (
+        <line
+          x1={0}
+          y1={originY - scaleY * ((i + 1) / 4)}
+          x2={width}
+          y2={originY - scaleY * ((i + 1) / 4)}
+          className="text-gray-200"
+          stroke="currentColor"
+        />
+      ))}
+      <line
+        x1={originX}
+        y1={0}
+        x2={originX}
+        y2={height}
+        className="text-gray-400"
+        stroke="currentColor"
+      />
+      <line
+        x1={0}
+        y1={originY}
+        x2={width}
+        y2={originY}
+        className="text-gray-400"
+        stroke="currentColor"
+      />
+      {nValues.map((n) => (
+        <>
+          <line
+            x1={originX + scaleX * n}
+            y1={originY - 8}
+            x2={originX + scaleX * n}
+            y2={originY + 8}
+            className="text-blue-600"
+            stroke="currentColor"
+          />
+          <text
+            x={originX + scaleX * n}
+            y={originY + 27}
+            fontSize={18}
+            textAnchor="middle"
+            className="text-blue-700"
+            fill="currentColor"
+          >
+            {n}
+          </text>
+        </>
+      ))}
+      <line
+        x1={originX - 8}
+        y1={originY - scaleY * 1}
+        x2={originX + 8}
+        y2={originY - scaleY * 1}
+        className="text-gray-400"
+        stroke="currentColor"
+      />
+      <text
+        x={originX - 20}
+        y={originY - scaleY * 1 + 1}
+        fontSize={18}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        className="text-gray-900"
+        fill="currentColor"
+      >
+        {1}
+      </text>
+      {fn &&
+        nValues.map((n) => (
+          <circle
+            cx={originX + scaleX * n}
+            cy={originY - scaleY * fn(n)}
+            r={5}
+            className="text-gray-900"
+            fill="currentColor"
+          />
+        ))}
+      {children && children({ originX, originY, scaleX, scaleY, nValues, fn })}
+    </svg>
+  );
+}
+
+function PizzaSequenceGraph({ width = 606, height = 300 }) {
+  const fn = (n) => n / (n + 1);
+
+  return (
+    <SequenceGraph width={width} height={height} fn={fn}>
+      {({ originX, originY, scaleX, nValues }) => (
+        <>
+          {nValues.map((n) => (
+            <PizzaSVG
+              numerator={n}
+              denominator={n + 1}
+              width={scaleX * 0.8}
+              height={scaleX * 0.8}
+              x={originX + scaleX * n - (scaleX * 0.8) / 2}
+              y={originY - scaleX * 0.8 - 13}
+            />
+          ))}
+        </>
+      )}
+    </SequenceGraph>
   );
 }
 
@@ -397,108 +582,6 @@ function PizzaSVG({ numerator, denominator, ...props }) {
         clipPath={`url(#cut-fraction-${numerator}-${denominator})`}
         fill="url(#pizza-pattern)"
       />
-    </svg>
-  );
-}
-
-function PizzaSequenceGraph({ width = 606, height = 300 }) {
-  const originX = 40;
-  const originY = 260;
-  const scaleX = 45;
-  const scaleY = 220;
-
-  const nValues = [...new Array(Math.ceil((width - originX) / scaleX))].map(
-    (_, i) => i + 1
-  );
-
-  return (
-    <svg viewBox="0 0 606 300" className="w-full h-auto">
-      {[...new Array(4)].map((_, i) => (
-        <line
-          x1={0}
-          y1={originY - scaleY * ((i + 1) / 4)}
-          x2={606}
-          y2={originY - scaleY * ((i + 1) / 4)}
-          className="text-gray-200"
-          stroke="currentColor"
-        />
-      ))}
-      <line
-        x1={originX}
-        y1={0}
-        x2={originX}
-        y2={300}
-        className="text-gray-400"
-        stroke="currentColor"
-      />
-      <line
-        x1={0}
-        y1={originY}
-        x2={606}
-        y2={originY}
-        className="text-gray-400"
-        stroke="currentColor"
-      />
-      {nValues.map((n) => (
-        <>
-          <line
-            x1={originX + scaleX * n}
-            y1={originY - 8}
-            x2={originX + scaleX * n}
-            y2={originY + 8}
-            className="text-blue-600"
-            stroke="currentColor"
-          />
-          <text
-            x={originX + scaleX * n}
-            y={originY + 27}
-            fontSize={18}
-            textAnchor="middle"
-            className="text-blue-700"
-            fill="currentColor"
-          >
-            {n}
-          </text>
-        </>
-      ))}
-      <line
-        x1={originX - 8}
-        y1={originY - scaleY * 1}
-        x2={originX + 8}
-        y2={originY - scaleY * 1}
-        className="text-gray-400"
-        stroke="currentColor"
-      />
-      <text
-        x={originX - 20}
-        y={originY - scaleY * 1 + 1}
-        fontSize={18}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        className="text-gray-900"
-        fill="currentColor"
-      >
-        {1}
-      </text>
-      {nValues.map((n) => (
-        <circle
-          cx={originX + scaleX * n}
-          cy={originY - scaleY * (n / (n + 1))}
-          r={5}
-          className="text-gray-900"
-          fill="currentColor"
-        />
-      ))}
-      {nValues.map((n) => (
-        <PizzaSVG
-          numerator={n}
-          denominator={n + 1}
-          width={scaleX * 0.8}
-          height={scaleX * 0.8}
-          x={originX + scaleX * n - (scaleX * 0.8) / 2}
-          y={originY - scaleX * 0.8 - 13}
-        />
-      ))}
     </svg>
   );
 }
