@@ -242,7 +242,7 @@ export default function HomePage() {
           TermBox={LatexTermBox}
           termBoxLabel={<Latex value={customSequenceValue} />}
         />
-        <div className="absolute -top-4 right-4 bg-white border shadow-sm rounded px-3 py-2">
+        <div className="absolute z-20 -top-4 right-4 bg-white border shadow-sm rounded px-3 py-2">
           <MathInput
             defaultValue={customSequenceValue}
             onChange={(newValue) => setCustomSequenceValue(newValue)}
