@@ -50,6 +50,7 @@ export default function HomePage() {
           TermBox={PizzaTermBox}
           termBoxHeight={88}
           columnWidth={80}
+          indexBoxLabel={null}
         />
       </div>
       {/* <div className="relative select-none">
@@ -189,6 +190,7 @@ export default function HomePage() {
           TermBox={PizzaTermBox}
           termBoxHeight={88}
           columnWidth={80}
+          termBoxLabel={<Latex value={String.raw`\frac{n}{n+1}`} />}
         />
         <div className="absolute z-20 -top-4 right-4 bg-white border shadow-sm rounded px-3 py-2">
           <Latex value="\left( \frac{n}{n+1} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}" />
@@ -238,6 +240,7 @@ export default function HomePage() {
             customSequenceFn ? (n) => customSequenceFn({ n }) : undefined
           }
           TermBox={LatexTermBox}
+          termBoxLabel={<Latex value={customSequenceValue} />}
         />
         <div className="absolute -top-4 right-4 bg-white border shadow-sm rounded px-3 py-2">
           <MathInput
@@ -267,6 +270,10 @@ function SequenceBox({
   graphHeight = 300,
   termBoxHeight = 50,
   columnWidth = 50,
+  termBoxLabel = null,
+  indexBoxLabel = (
+    <Latex value={String.raw`\textcolor{blue}{n \in \mathbb{N}}`} />
+  ),
 }) {
   const [scrollElem, setScrollElem] = useState(null);
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -330,17 +337,19 @@ function SequenceBox({
             ))}
           </svg>
         )}
-        <div
-          className="flex-grow-0 flex-shrink-0 px-2 flex items-center"
-          style={{ height: termBoxHeight }}
-        >
-          <Latex value={String.raw`\frac{n}{n+1}`} />
-        </div>
+        {termBoxLabel && (
+          <div
+            className="flex-grow-0 flex-shrink-0 px-2 flex items-center"
+            style={{ height: termBoxHeight }}
+          >
+            {termBoxLabel}
+          </div>
+        )}
         <div
           className="flex-grow-0 flex-shrink-0 px-2 flex items-center"
           style={{ height: indexBoxHeight }}
         >
-          <Latex value={String.raw`\textcolor{blue}{n \in \mathbb{N}}`} />
+          {indexBoxLabel}
         </div>
       </div>
 
