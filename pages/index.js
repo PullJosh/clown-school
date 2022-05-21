@@ -3,8 +3,9 @@ import { useState, useEffect, useRef } from "react";
 import { Latex } from "../components/Latex";
 import { MathInput } from "../components/MathInput";
 import evaluatex from "evaluatex/dist/evaluatex";
+import classNames from "classnames";
 
-function PizzaTermBox({ n }) {
+function renderPizzaTermBox(n) {
   return (
     <div className="flex flex-col justify-center items-center relative space-y-2">
       <PizzaSVG numerator={n} denominator={n + 1} />
@@ -13,10 +14,6 @@ function PizzaTermBox({ n }) {
       </div>
     </div>
   );
-}
-
-function LatexTermBox({ n }) {
-  return <Latex value={String.raw`\frac{${n}}{${n + 1}}`} />;
 }
 
 export default function HomePage() {
@@ -47,53 +44,12 @@ export default function HomePage() {
       </p>
       <div className="my-3">
         <SequenceBox
-          TermBox={PizzaTermBox}
+          renderTermBox={renderPizzaTermBox}
           termBoxHeight={88}
           columnWidth={80}
           indexBoxLabel={null}
         />
       </div>
-      {/* <div className="relative select-none">
-        <div className="relative my-3 shadow-inner border bg-gray-50 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto" ref={sequenceScrollRef}>
-            <div className="flex divide-x">
-              {new Array(100).fill(null).map((_, n) => (
-                <div
-                  key={n}
-                  className="shrink-0 flex flex-col items-stretch divide-y"
-                >
-                  <div className="px-2 py-2 flex justify-center">
-                    <div className="flex flex-col justify-center items-center relative space-y-2">
-                      <PizzaSVG numerator={n + 1} denominator={n + 2} />
-                      <div className="text-base">
-                        <Latex value={String.raw`${n + 1} / ${n + 2}`} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="px-2 text-lg text-center bg-blue-50 text-blue-700">
-                    {n + 1}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <button
-            className="absolute top-0 h-full right-0 w-20 bg-gradient-to-l from-gray-50 flex justify-end items-center"
-            onClick={scrollRight}
-          >
-            <div className="w-7 h-7 mr-2 rounded-full border border-gray-300 bg-white text-gray-500 flex justify-center items-center">
-              <svg viewBox="0 0 24 24" className="w-4 h-4 translate-x-[-16%]">
-                <polyline
-                  points="12,3 21,12 12,21"
-                  stroke="currentColor"
-                  fill="none"
-                  strokeWidth={3}
-                />
-              </svg>
-            </div>
-          </button>
-        </div>
-      </div> */}
       <p className="mb-3">
         Notice how the sequence is infinitely long (you can keep scrolling
         forever) and each term of the sequence is{" "}
@@ -187,10 +143,12 @@ export default function HomePage() {
       <div className="relative my-5">
         <SequenceBox
           graphFn={(n) => n / (n + 1)}
-          TermBox={PizzaTermBox}
+          renderTermBox={renderPizzaTermBox}
           termBoxHeight={88}
           columnWidth={80}
           termBoxLabel={<Latex value={String.raw`\frac{n}{n+1}`} />}
+          graphLimit={1}
+          keepInGraphView={[0]}
         />
         <div className="absolute z-20 -top-4 right-4 bg-white border shadow-sm rounded px-3 py-2">
           <Latex value="\left( \frac{n}{n+1} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}" />
@@ -219,8 +177,34 @@ export default function HomePage() {
         them. The following gallery contains a selection of interesting
         sequences:
       </p>
-      <div className="border-4 bg-gray-50 border-dashed rounded px-8 py-4 text-center italic my-3">
-        Coming soon ;)
+      <div className="my-5">
+        <SequenceBox
+          renderTermBox={(n) => <Latex value={String.raw`${n}`} />}
+          termBoxLabel={<Latex value="n" />}
+          graphFn={(n) => n}
+          keepInGraphView={[0]}
+        />
+        <SequenceBox
+          renderTermBox={(n) => <Latex value={String.raw`\frac{1}{${n}}`} />}
+          termBoxLabel={<Latex value={String.raw`\frac{1}{n}`} />}
+          graphFn={(n) => 1 / n}
+          graphLimit={0}
+        />
+        <SequenceBox
+          renderTermBox={(n) => <Latex value={`${(-1) ** n}`} />}
+          termBoxLabel={<Latex value="(-1)^n" />}
+          graphFn={(n) => (-1) ** n}
+        />
+        <SequenceBox
+          renderTermBox={(n) => (
+            <Latex
+              value={String.raw`${n % 2 === 1 ? "-" : ""}\frac{1}{${n}}`}
+            />
+          )}
+          termBoxLabel={<Latex value="(-1)^n \cdot \frac{1}{n}" />}
+          graphFn={(n) => (-1) ** n / n}
+          graphLimit={0}
+        />
       </div>
       <p>
         If you had to classify these sequences into categories, how might you
@@ -239,7 +223,9 @@ export default function HomePage() {
           graphFn={
             customSequenceFn ? (n) => customSequenceFn({ n }) : undefined
           }
-          TermBox={LatexTermBox}
+          renderTermBox={(n) => (
+            <Latex value={String.raw`\frac{${n}}{${n + 1}}`} />
+          )}
           termBoxLabel={<Latex value={customSequenceValue} />}
         />
         <div className="absolute z-20 -top-4 right-4 bg-white border shadow-sm rounded px-3 py-2">
@@ -264,10 +250,60 @@ function Aside({ children }) {
   );
 }
 
+function getIdealVerticalWindow(values, centerValue = null) {
+  const minValue = Math.min(...values);
+  const maxValue = Math.max(...values);
+
+  if (centerValue === null) {
+    centerValue = (minValue + maxValue) / 2;
+  }
+
+  let range = Math.max(maxValue - centerValue, centerValue - minValue) / 0.6;
+  if (range === 0) {
+    range = 1;
+  }
+
+  return [centerValue - range, centerValue + range];
+}
+
+function getMultiplesInRange(factor, min, max) {
+  min = min / factor;
+  max = max / factor;
+  let result = [];
+  for (let i = Math.ceil(min); i <= Math.floor(max); i++) {
+    result.push(i * factor);
+  }
+  return result;
+}
+
+function getBestLineSpacing(valueHeight, pixelHeight) {
+  const idealSpacing = (valueHeight / pixelHeight) * 50; // Spaced every 50px is ideal (but not necessarily possible)
+  const chooseClosest = (values) => {
+    let closest = values[0];
+    for (const value of values) {
+      if (Math.abs(value - idealSpacing) < Math.abs(closest - idealSpacing)) {
+        closest = value;
+      }
+    }
+    return closest;
+  };
+  const candidates = [
+    10 ** Math.floor(Math.log10(idealSpacing)),
+    10 ** Math.ceil(Math.log10(idealSpacing)),
+    2 * 10 ** Math.floor(Math.log10(idealSpacing / 2)),
+    2 * 10 ** Math.ceil(Math.log10(idealSpacing / 2)),
+    5 * 10 ** Math.floor(Math.log10(idealSpacing / 5)),
+    5 * 10 ** Math.ceil(Math.log10(idealSpacing / 5)),
+  ];
+  return chooseClosest(candidates);
+}
+
 function SequenceBox({
-  TermBox,
+  renderTermBox,
   graphFn = null,
   graphHeight = 300,
+  graphLimit = null,
+  keepInGraphView = [],
   termBoxHeight = 50,
   columnWidth = 50,
   termBoxLabel = null,
@@ -300,51 +336,149 @@ function SequenceBox({
 
   const numberToRenderOffscreen = 20;
 
-  let virtualizedCount =
-    Math.floor(scrollLeft / columnWidth) - numberToRenderOffscreen;
+  const hiddenCount = Math.floor(scrollLeft / columnWidth);
+  let virtualizedCount = hiddenCount - numberToRenderOffscreen;
   if (virtualizedCount < 0) {
     virtualizedCount = 0;
   }
 
-  const renderedCount =
-    Math.ceil(elementWidth / columnWidth) + 2 * numberToRenderOffscreen;
+  const visibleCount = Math.ceil(elementWidth / columnWidth);
+  const renderedCount = visibleCount + 2 * numberToRenderOffscreen;
 
   const minN = 1 + virtualizedCount;
   const nValues = [...new Array(renderedCount)].map((_, i) => minN + i);
 
+  const visibleNValues = [...new Array(visibleCount)].map(
+    (_, i) => hiddenCount + i + 1
+  );
+
+  let idealMinY = -1;
+  let idealMaxY = 1;
+  if (graphFn) {
+    [idealMinY, idealMaxY] = getIdealVerticalWindow(
+      [...visibleNValues.map((n) => graphFn(n)), ...keepInGraphView],
+      graphLimit
+    );
+  }
+
+  const [minY, setMinY] = useState(idealMinY);
+  const [maxY, setMaxY] = useState(idealMaxY);
+  const [allowScrolling, setAllowScrolling] = useState(true);
+
+  const zoomToIdeal = () => {
+    setAllowScrolling(false);
+
+    const startTime = Date.now();
+    const duration = 400;
+    function update() {
+      let progress = (Date.now() - startTime) / duration;
+      if (progress > 1) {
+        progress = 1;
+      }
+
+      const easeInOut = (t) =>
+        t < 0.5 ? 4 * t ** 3 : 1 - (2 - 2 * t) ** 3 / 2;
+      const easedProgress = easeInOut(progress);
+
+      setMinY(minY + (idealMinY - minY) * easedProgress);
+      setMaxY(maxY + (idealMaxY - maxY) * easedProgress);
+
+      if (progress === 1) {
+        setAllowScrolling(true);
+      } else {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  };
+
+  const getScreenY = (y) => {
+    return graphHeight * (1 - (y - minY) / (maxY - minY));
+  };
+
   const indexBoxHeight = 30;
+
+  const gridLineYSpacing = getBestLineSpacing(maxY - minY, graphHeight);
+  const gridLineYValues = getMultiplesInRange(gridLineYSpacing, minY, maxY);
+
+  const formatAxisLabel = (y) => {
+    if (Math.abs(y) >= 1_000_000 || (Math.abs(y) < 0.0001 && y !== 0)) {
+      const formatter = new Intl.NumberFormat(undefined, {
+        notation: "scientific",
+      });
+
+      return formatter.format(y);
+    }
+
+    const formatter = new Intl.NumberFormat(undefined, {
+      maximumFractionDigits: 4,
+    });
+
+    return formatter.format(y);
+  };
 
   return (
     <div className="relative select-none">
+      <button
+        onClick={zoomToIdeal}
+        className="absolute bottom-2 right-2 bg-white border rounded px-4 py-2 z-50"
+      >
+        Zoom
+      </button>
+
       {/* Left column of outside-the-box info */}
-      <div className="absolute z-10 top-0 h-full left-0 -translate-x-full py-px space-y-px flex flex-col items-end">
+      <div className="absolute z-30 top-0 h-full left-0 -translate-x-full py-px space-y-px flex flex-col items-end">
         {graphFn && (
-          <svg
-            className="flex-grow-0 flex-shrink-0 translate-x-1/2"
-            width={20}
-            height={graphHeight}
-            viewBox={`0 0 20 ${graphHeight}`}
-          >
-            {[50, 100, 150, 200, 250].map((y) => (
-              <line
-                x1={0}
-                x2={20}
-                y1={y}
-                y2={y}
-                className="text-gray-300"
-                stroke="currentColor"
-              />
-            ))}
-          </svg>
-        )}
-        {termBoxLabel && (
           <div
-            className="flex-grow-0 flex-shrink-0 px-2 flex items-center"
-            style={{ height: termBoxHeight }}
+            className="relative flex-grow-0 flex-shrink-0 flex translate-x-[10px]"
+            style={{ height: graphHeight }}
           >
-            {termBoxLabel}
+            {/* Number labels */}
+            <div className="relative bg-red-500">
+              {gridLineYValues.map((y) => (
+                <span
+                  key={y}
+                  style={{ top: getScreenY(y) }}
+                  className={classNames(
+                    "absolute right-1 leading-none -translate-y-1/2 text-sm whitespace-nowrap",
+                    {
+                      "text-gray-400": y !== 0,
+                      "text-gray-500": y === 0,
+                    }
+                  )}
+                >
+                  {formatAxisLabel(y)}
+                </span>
+              ))}
+            </div>
+
+            {/* Tick marks */}
+            <svg
+              width={20}
+              height={graphHeight}
+              viewBox={`0 0 20 ${graphHeight}`}
+            >
+              {gridLineYValues.map((y) => (
+                <line
+                  key={y}
+                  x1={0}
+                  x2={20}
+                  y1={getScreenY(y)}
+                  y2={getScreenY(y)}
+                  className="text-gray-300"
+                  stroke="currentColor"
+                />
+              ))}
+            </svg>
           </div>
         )}
+        <div
+          className="flex-grow-0 flex-shrink-0 px-2 flex items-center"
+          style={{ height: termBoxHeight }}
+        >
+          {termBoxLabel}
+        </div>
         <div
           className="flex-grow-0 flex-shrink-0 px-2 flex items-center"
           style={{ height: indexBoxHeight }}
@@ -388,7 +522,10 @@ function SequenceBox({
 
         <div
           ref={(elem) => setScrollElem(elem)}
-          className="flex overflow-x-scroll hidden-scrollbars relative"
+          className={classNames("flex hidden-scrollbars relative", {
+            "overflow-x-scroll": allowScrolling,
+            "overflow-x-hidden": !allowScrolling,
+          })}
         >
           {/* Spacer div to take up off-screen room for virtualized scrolling */}
           <div
@@ -400,23 +537,16 @@ function SequenceBox({
               <svg
                 viewBox={`0 0 ${nValues.length * columnWidth} ${graphHeight}`}
                 width={nValues.length * columnWidth}
-                height={300}
+                height={graphHeight}
               >
-                <line
-                  x1={0}
-                  x2={nValues.length * columnWidth}
-                  y1={150}
-                  y2={150}
-                  className="text-gray-300"
-                  stroke="currentColor"
-                />
-                {[50, 100, 200, 250].map((y) => (
+                {gridLineYValues.map((y) => (
                   <line
+                    key={y}
                     x1={0}
                     x2={nValues.length * columnWidth}
-                    y1={y}
-                    y2={y}
-                    className="text-gray-200"
+                    y1={getScreenY(y)}
+                    y2={getScreenY(y)}
+                    className={y === 0 ? "text-gray-300" : "text-gray-200"}
                     stroke="currentColor"
                   />
                 ))}
@@ -424,7 +554,7 @@ function SequenceBox({
                   <circle
                     key={n}
                     cx={columnWidth * (index + 0.5)}
-                    cy={150 - 100 * graphFn(n)}
+                    cy={getScreenY(graphFn(n))}
                     r={5}
                     className="text-gray-900"
                     fill="currentColor"
@@ -439,7 +569,7 @@ function SequenceBox({
                   style={{ width: columnWidth, height: termBoxHeight }}
                   className="flex justify-center items-center overflow-hidden"
                 >
-                  <TermBox n={n} />
+                  {renderTermBox(n)}
                 </div>
               ))}
             </div>
@@ -514,123 +644,6 @@ function SequenceBox({
     </div>
   );
 }
-
-// function SequenceGraph({ width = 606, height = 300, fn, children }) {
-//   const originX = 40;
-//   const originY = 260;
-//   const scaleX = 45;
-//   const scaleY = 220;
-
-//   const nValues = [...new Array(Math.ceil((width - originX) / scaleX))].map(
-//     (_, i) => i + 1
-//   );
-
-//   return (
-//     <svg viewBox={`0 0 ${width} ${height}`} style={{ width, height }}>
-//       {[...new Array(4)].map((_, i) => (
-//         <line
-//           x1={0}
-//           y1={originY - scaleY * ((i + 1) / 4)}
-//           x2={width}
-//           y2={originY - scaleY * ((i + 1) / 4)}
-//           className="text-gray-200"
-//           stroke="currentColor"
-//         />
-//       ))}
-//       <line
-//         x1={originX}
-//         y1={0}
-//         x2={originX}
-//         y2={height}
-//         className="text-gray-400"
-//         stroke="currentColor"
-//       />
-//       <line
-//         x1={0}
-//         y1={originY}
-//         x2={width}
-//         y2={originY}
-//         className="text-gray-400"
-//         stroke="currentColor"
-//       />
-//       {nValues.map((n) => (
-//         <>
-//           <line
-//             x1={originX + scaleX * n}
-//             y1={originY - 8}
-//             x2={originX + scaleX * n}
-//             y2={originY + 8}
-//             className="text-blue-600"
-//             stroke="currentColor"
-//           />
-//           <text
-//             x={originX + scaleX * n}
-//             y={originY + 27}
-//             fontSize={18}
-//             textAnchor="middle"
-//             className="text-blue-700"
-//             fill="currentColor"
-//           >
-//             {n}
-//           </text>
-//         </>
-//       ))}
-//       <line
-//         x1={originX - 8}
-//         y1={originY - scaleY * 1}
-//         x2={originX + 8}
-//         y2={originY - scaleY * 1}
-//         className="text-gray-400"
-//         stroke="currentColor"
-//       />
-//       <text
-//         x={originX - 20}
-//         y={originY - scaleY * 1 + 1}
-//         fontSize={18}
-//         textAnchor="middle"
-//         dominantBaseline="middle"
-//         className="text-gray-900"
-//         fill="currentColor"
-//       >
-//         {1}
-//       </text>
-//       {fn &&
-//         nValues.map((n) => (
-//           <circle
-//             cx={originX + scaleX * n}
-//             cy={originY - scaleY * fn(n)}
-//             r={5}
-//             className="text-gray-900"
-//             fill="currentColor"
-//           />
-//         ))}
-//       {children && children({ originX, originY, scaleX, scaleY, nValues, fn })}
-//     </svg>
-//   );
-// }
-
-// function PizzaSequenceGraph({ width = 606, height = 300 }) {
-//   const fn = (n) => n / (n + 1);
-
-//   return (
-//     <SequenceGraph width={width} height={height} fn={fn}>
-//       {({ originX, originY, scaleX, nValues }) => (
-//         <>
-//           {nValues.map((n) => (
-//             <PizzaSVG
-//               numerator={n}
-//               denominator={n + 1}
-//               width={scaleX * 0.8}
-//               height={scaleX * 0.8}
-//               x={originX + scaleX * n - (scaleX * 0.8) / 2}
-//               y={originY - scaleX * 0.8 - 13}
-//             />
-//           ))}
-//         </>
-//       )}
-//     </SequenceGraph>
-//   );
-// }
 
 function PizzaSVG({ numerator, denominator, ...props }) {
   const angle = Math.PI / 2 - 2 * Math.PI * (numerator / denominator);

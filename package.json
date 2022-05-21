@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "classnames": "^2.3.1",
     "evaluatex": "^2.2.0",
     "katex": "^0.15.3",
     "mathquill": "^0.10.1-a",
