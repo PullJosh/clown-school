@@ -121,7 +121,7 @@ export default function WhatIsASequence() {
           <Latex value="\left( \frac{n}{n+1} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}" />
         }
       >
-        <Sequence.Graph fn={(n) => n / (n + 1)} limit={1} keepInView={[0]} />
+        <Sequence.Graph fn={(n) => n / (n + 1)} />
         <Sequence.Terms
           height={88}
           render={renderPizzaTermBox}
@@ -149,30 +149,46 @@ export default function WhatIsASequence() {
         them. The following gallery contains a selection of interesting
         sequences:
       </p>
-      <div className="grid grid-cols-2 gap-x-12 gap-y-8">
+      <div className="grid grid-cols-2 gap-x-12 gap-y-8 my-8">
         <Sequence
-          title={<Latex value="n" />}
+          title={
+            <Latex
+              value={String.raw`\left( n \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+            />
+          }
           columnWidth={20}
           allowScrolling={false}
         >
           <Sequence.Graph fn={(n) => n} limit={0} height={200} />
         </Sequence>
         <Sequence
-          title={<Latex value={String.raw`\frac{1}{n}`} />}
+          title={
+            <Latex
+              value={String.raw`\left( \frac{1}{n} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+            />
+          }
           columnWidth={20}
           allowScrolling={false}
         >
           <Sequence.Graph fn={(n) => 1 / n} limit={0} height={200} />
         </Sequence>
         <Sequence
-          title={<Latex value="(-1)^n" />}
+          title={
+            <Latex
+              value={String.raw`\left( (-1)^n \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+            />
+          }
           columnWidth={20}
           allowScrolling={false}
         >
           <Sequence.Graph fn={(n) => (-1) ** n} height={200} />
         </Sequence>
         <Sequence
-          title={<Latex value="\frac{(-1)^n}{n}" />}
+          title={
+            <Latex
+              value={String.raw`\left( \frac{(-1)^n}{n} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+            />
+          }
           columnWidth={20}
           allowScrolling={false}
         >

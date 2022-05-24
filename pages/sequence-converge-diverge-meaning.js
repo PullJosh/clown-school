@@ -2,6 +2,7 @@ import { Layout } from "../components/Layout";
 import { ComingSoon } from "../components/ComingSoon";
 import { VocabTerm } from "../components/VocabTerm";
 import { Latex } from "../components/Latex";
+import { Sequence } from "../components/Sequence";
 
 export default function SequenceConvergeDivergeMeaning() {
   return (
@@ -52,14 +53,125 @@ export default function SequenceConvergeDivergeMeaning() {
         Here are some examples of <VocabTerm bold>convergent</VocabTerm>{" "}
         sequences:
       </p>
-      <ComingSoon>
-        Gallery of example sequences with descriptions of each limit and why
-        it's interesting.
-      </ComingSoon>
+      <div className="grid grid-cols-2 gap-x-12 gap-y-8 my-8">
+        <div className="not-prose">
+          <Sequence
+            title={
+              <Latex
+                value={String.raw`\left( \frac{1}{n} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+              />
+            }
+            columnWidth={20}
+            allowScrolling={false}
+          >
+            <Sequence.Graph fn={(n) => 1 / n} limit={0} height={200} />
+          </Sequence>
+          <p className="leading-normal mt-1">
+            This is an extremely common converging sequence that is very useful
+            when writing proofs. It converges to 0.
+          </p>
+        </div>
+        <div className="not-prose">
+          <Sequence
+            title={
+              <Latex
+                value={String.raw`\left( \frac{(-1)^n}{n} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+              />
+            }
+            columnWidth={20}
+            allowScrolling={false}
+          >
+            <Sequence.Graph fn={(n) => (-1) ** n / n} limit={0} height={200} />
+          </Sequence>
+          <p className="leading-normal mt-1">
+            This sequence alternates positive/negative, but it still converges
+            to 0.
+          </p>
+        </div>
+        <div className="not-prose">
+          <Sequence
+            title={
+              <Latex
+                value={String.raw`\left( 5 + \frac{1}{n} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+              />
+            }
+            columnWidth={20}
+            allowScrolling={false}
+          >
+            <Sequence.Graph fn={(n) => 5 + 1 / n} limit={5} height={200} />
+          </Sequence>
+          <p className="leading-normal mt-1">
+            This sequences converges to 5. Obviously, you could change the
+            number in the sequence to make it converge to anything you want.
+          </p>
+        </div>
+        <div className="not-prose">
+          <Sequence
+            title={
+              <Latex
+                value={String.raw`\left( \frac{4n}{n+2} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+              />
+            }
+            columnWidth={20}
+            allowScrolling={false}
+          >
+            <Sequence.Graph
+              fn={(n) => (4 * n) / (n + 2)}
+              limit={4}
+              height={200}
+            />
+          </Sequence>
+          <p className="leading-normal mt-1">
+            This sequence converges to 4. If you've ever taken a calculus class,
+            this might feel familiar. Intuitively, the +2 in the denominator
+            essentially becomes meaningless as n gets large, so the n's cancel
+            and we just get 4.
+          </p>
+        </div>
+        <div className="not-prose">
+          <Sequence
+            title={
+              <Latex
+                value={String.raw`\left( -3 \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+              />
+            }
+            columnWidth={20}
+            allowScrolling={false}
+          >
+            <Sequence.Graph fn={(n) => -3} limit={-3} height={200} />
+          </Sequence>
+          <p className="leading-normal mt-1">
+            This is the constant sequence -3, and we say that it converges to
+            -3. (This might feel like it goes against the spirit of “getting
+            closer and closer” since it's exactly -3 from the very beginning.
+            But when we define convergence technically, we'll see that this
+            definitely counts.)
+          </p>
+        </div>
+        <div className="not-prose">
+          <Sequence
+            title={
+              <Latex
+                value={String.raw`\left( \min \{ n, 7 \} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+              />
+            }
+            columnWidth={20}
+            allowScrolling={false}
+          >
+            <Sequence.Graph fn={(n) => Math.min(n, 7)} limit={7} height={200} />
+          </Sequence>
+          <p className="leading-normal mt-1">
+            The min function chooses the smallest option. So if n is small, it
+            chooses n. But if n is big, it chooses 7 instead. This might feel
+            like cheating, but by the technical definition, this sequence
+            definitely converges to 7.
+          </p>
+        </div>
+      </div>
       <p>
-        When a sequence converges, we often what to talk about the
-        limit&mdash;the number it converges to. We do that mathematically using
-        this limit notation:
+        When a sequence converges, we often talk about the <em>limit</em>
+        &mdash;the number it converges to. We do that mathematically using this
+        limit notation:
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2">
         <Latex
@@ -75,11 +187,11 @@ export default function SequenceConvergeDivergeMeaning() {
           displayMode={true}
         />
         <Latex
-          value={String.raw`\lim_{\textcolor{#1d4ed8}{n \rightarrow \infty}} \left( 1 - \frac{1}{n} \right) = 1`}
+          value={String.raw`\lim_{\textcolor{#1d4ed8}{n \rightarrow \infty}} \left( \frac{4n}{n+2} \right) = 4`}
           displayMode={true}
         />
         <Latex
-          value={String.raw`\lim_{\textcolor{#1d4ed8}{n \rightarrow \infty}} \left( 3 \right) = 3`}
+          value={String.raw`\lim_{\textcolor{#1d4ed8}{n \rightarrow \infty}} \left( -3 \right) = -3`}
           displayMode={true}
         />
         <Latex
