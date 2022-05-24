@@ -1,7 +1,4 @@
-import Link from "next/link";
-import { Sequence } from "../components/Sequence";
 import { Layout } from "../components/Layout";
-import { Aside } from "../components/Aside";
 import { ComingSoon } from "../components/ComingSoon";
 import { VocabTerm } from "../components/VocabTerm";
 import { Latex } from "../components/Latex";
@@ -103,13 +100,13 @@ export default function SequenceConvergeDivergeMeaning() {
         .
       </p>
       <p>
-        We sometimes also write things like{" "}
+        We also sometimes write things like "
         <Latex value={String.raw`x_n \rightarrow 2`} /> as{" "}
-        <Latex value={String.raw`\textcolor{#1d4ed8}{n \rightarrow \infty}`} />
-        , which means "<Latex value={String.raw`x_n`} /> approaches{" "}
+        <Latex value={String.raw`\textcolor{#1d4ed8}{n \rightarrow \infty}`} />"
+        , which means "<Latex value={String.raw`x_n`} /> goes to{" "}
         <Latex value="2" /> as{" "}
         <span className="text-blue-700">
-          <Latex value="n" /> approaches <Latex value="\infty" />
+          <Latex value="n" /> goes to <Latex value="\infty" />
         </span>
         ." Hopefully that's intuitive enough.
       </p>

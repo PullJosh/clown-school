@@ -30,7 +30,9 @@ export function Layout({ children, title, tldr }) {
       </Head>
       <div className="mb-8 relative xl:fixed xl:top-0 xl:left-0 xl:w-72 xl:h-full xl:px-8 xl:py-6 xl:m-0 xl:overflow-y-auto">
         <nav>
-          <div className="text-slate-900 font-semibold mb-2">Sequences</div>
+          <Link href="/what-is-a-sequence">
+            <a className="block text-slate-900 font-semibold mb-2">Sequences</a>
+          </Link>
           <SidebarLink href="/what-is-a-sequence">
             What is a sequence?
           </SidebarLink>
