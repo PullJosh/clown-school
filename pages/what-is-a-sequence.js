@@ -149,7 +149,7 @@ export default function WhatIsASequence() {
         them. The following gallery contains a selection of interesting
         sequences:
       </p>
-      <div className="grid grid-cols-2 gap-x-12 gap-y-8 my-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8 my-8">
         <Sequence
           title={
             <Latex
