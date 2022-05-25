@@ -144,8 +144,8 @@ export default function SequenceConvergeDivergeMeaning() {
             This is the constant sequence -3, and we say that it converges to
             -3. (This might feel like it goes against the spirit of “getting
             closer and closer” since it's exactly -3 from the very beginning.
-            But when we define convergence technically, we'll see that this
-            definitely counts.)
+            But when we define convergence technically, you'll see that this
+            counts.)
           </p>
         </div>
         <div className="not-prose">
@@ -161,10 +161,10 @@ export default function SequenceConvergeDivergeMeaning() {
             <Sequence.Graph fn={(n) => Math.min(n, 7)} limit={7} height={200} />
           </Sequence>
           <p className="leading-normal mt-1">
-            The min function chooses the smallest option. So if n is small, it
-            chooses n. But if n is big, it chooses 7 instead. This might feel
-            like cheating, but by the technical definition, this sequence
-            definitely converges to 7.
+            The min function chooses the smallest option from a set. So if n is
+            small, it chooses n. But if n is big, it chooses 7 instead. This
+            might feel like cheating, but by the technical definition, this
+            sequence definitely converges to 7.
           </p>
         </div>
       </div>
