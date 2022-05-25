@@ -208,7 +208,13 @@ Sequence.Graph = function SequenceGraph({
   const [minY, setMinY] = useState(idealMinY);
   const [maxY, setMaxY] = useState(idealMaxY);
 
-  const zoomToIdeal = () => {
+  const zoomToIdeal = (instant = false) => {
+    if (instant) {
+      setMinY(idealMinY);
+      setMaxY(idealMaxY);
+      return;
+    }
+
     if (setScrollingEnabled) {
       setScrollingEnabled(false);
     }
@@ -254,9 +260,19 @@ Sequence.Graph = function SequenceGraph({
     }
 
     timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = null;
       zoomToIdeal();
     }, 200);
   }, [zoomToIdeal]);
+
+  useEffect(() => {
+    // When idealMinY and idealMaxY change...
+    // If the change is caused by the user scrolling, just wait and animate the transition at the end
+    // But if the change is caused by anything else, update instantly:
+    if (timeoutRef.current === null) {
+      zoomToIdeal(true);
+    }
+  }, [idealMinY, idealMaxY]);
 
   useEffect(() => {
     if (scrollElem) {
