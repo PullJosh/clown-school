@@ -497,8 +497,8 @@ export default function SequenceConvergeDivergeMeaning() {
       </div>
       <h2>The Sequence Convergence Game</h2>
       <p>
-        My examples of converging and diverging sequences are cute, but if you
-        actually want to learn, you have to practice.
+        Looking at examples is cute, but if you actually want to learn, you have
+        to practice.
       </p>
       <p>
         In the game below, you are shown a sequence and asked to classify it as{" "}
