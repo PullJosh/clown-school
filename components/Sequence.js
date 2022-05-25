@@ -1,18 +1,8 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  createContext,
-  Children,
-} from "react";
+import { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { Latex } from "./Latex";
 import classNames from "classnames";
 
-import {
-  SequenceContext,
-  SequenceChildrenDoubleRenderContext,
-} from "../util/SequenceComponentContext";
+import { SequenceContext } from "../util/SequenceComponentContext";
 
 export function Sequence({
   children,
@@ -93,66 +83,53 @@ export function Sequence({
         hiddenCount,
         setScrollingEnabled: allowScrolling ? setScrollingEnabled : null,
         columnWidth,
+        scrollElem,
       }}
     >
       <div className="relative select-none">
-        {/* Left column of outside-the-box info */}
-        <div className="absolute z-30 top-0 h-full left-0 -translate-x-full py-px space-y-px flex flex-col items-end">
-          <SequenceChildrenDoubleRenderContext.Provider value="label">
-            {Children.map(children, (child) => (
-              <div className="flex-grow-0 flex-shrink-0">{child}</div>
-            ))}
-          </SequenceChildrenDoubleRenderContext.Provider>
-        </div>
+        {/* Scroll left button */}
+        {scrollLeft > 0 && allowScrolling && (
+          <SequenceScrollButton
+            direction="left"
+            onClick={onClickScrollLeft}
+            onDoubleClick={onDoubleClickScrollLeft}
+          />
+        )}
 
-        {/* Main scrolling content */}
-        <div className="relative bg-gray-50 border border-gray-300 rounded-lg overflow-hidden">
-          {/* Scroll left button */}
-          {scrollLeft > 0 && allowScrolling && (
-            <SequenceScrollButton
-              direction="left"
-              onClick={onClickScrollLeft}
-              onDoubleClick={onDoubleClickScrollLeft}
-            />
-          )}
-
-          <div
-            ref={(elem) => setScrollElem(elem)}
-            className={classNames("flex hidden-scrollbars relative", {
+        <div
+          ref={(elem) => setScrollElem(elem)}
+          className={classNames(
+            "static flex hidden-scrollbars bg-gray-50 border border-gray-300 rounded-lg",
+            {
               "overflow-x-scroll": scrollingEnabled,
               "overflow-x-hidden": !scrollingEnabled,
-            })}
-          >
-            {/* Spacer div to take up off-screen room for virtualized scrolling */}
-            <div
-              style={{ width: columnWidth * virtualizedCount }}
-              className="flex-shrink-0 flex-grow-0"
-            />
+            }
+          )}
+        >
+          {/* Spacer div to take up off-screen room for virtualized scrolling */}
+          <div
+            style={{ width: columnWidth * virtualizedCount }}
+            className="flex-shrink-0 flex-grow-0"
+          />
 
-            {/* Main content */}
-            <div className="flex flex-col divide-y divide-gray-300">
-              <SequenceChildrenDoubleRenderContext.Provider value="content">
-                {children}
-              </SequenceChildrenDoubleRenderContext.Provider>
-            </div>
-
-            {/* Add extra width to the right side just in case you scroll really fast */}
-            {/* (Better to have empty space where nothing is currently rendered than a hard stop.) */}
-            <div
-              style={{ width: 2000 }}
-              className="flex-shrink-0 flex-grow-0"
-            />
+          {/* Main content */}
+          <div className="flex flex-col divide-y divide-gray-300">
+            {children}
           </div>
 
-          {/* Scroll right button */}
-          {allowScrolling && (
-            <SequenceScrollButton
-              direction="right"
-              onClick={onClickScrollRight}
-              onDoubleClick={onDoubleClickScrollRight}
-            />
-          )}
+          {/* Add extra width to the right side just in case you scroll really fast */}
+          {/* (Better to have empty space where nothing is currently rendered than a hard stop.) */}
+          <div style={{ width: 2000 }} className="flex-shrink-0 flex-grow-0" />
         </div>
+
+        {/* Scroll right button */}
+        {allowScrolling && (
+          <SequenceScrollButton
+            direction="right"
+            onClick={onClickScrollRight}
+            onDoubleClick={onDoubleClickScrollRight}
+          />
+        )}
 
         {/* Title box */}
         {title && (
@@ -184,17 +161,20 @@ export function Sequence({
   );
 }
 
-function SequenceRow({ children, label = null }) {
-  const renderMode = useContext(SequenceChildrenDoubleRenderContext);
-
-  switch (renderMode) {
-    case "content":
-      return children;
-    case "label":
-      return label;
-    default:
-      return null;
-  }
+function SequenceRow({ children, label = null, height }) {
+  return (
+    <div>
+      {children}
+      {label && (
+        <div
+          className="absolute left-0 z-50 flex items-stretch justify-end"
+          style={{ height, transform: `translate(-100%, ${-height}px)` }}
+        >
+          {label}
+        </div>
+      )}
+    </div>
+  );
 }
 
 Sequence.Graph = function SequenceGraph({
@@ -209,6 +189,7 @@ Sequence.Graph = function SequenceGraph({
     hiddenCount,
     setScrollingEnabled,
     columnWidth,
+    scrollElem,
   } = useContext(SequenceContext);
 
   const visibleNValues = [...new Array(visibleCount)].map(
@@ -266,8 +247,28 @@ Sequence.Graph = function SequenceGraph({
   const gridLineYSpacing = getBestLineSpacing(maxY - minY, height);
   const gridLineYValues = getMultiplesInRange(gridLineYSpacing, minY, maxY);
 
+  const timeoutRef = useRef(null);
+  const onScroll = useCallback(() => {
+    if (timeoutRef) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      zoomToIdeal();
+    }, 200);
+  }, [zoomToIdeal]);
+
+  useEffect(() => {
+    if (scrollElem) {
+      scrollElem.addEventListener("scroll", onScroll);
+      return () => {
+        scrollElem.removeEventListener("scroll", onScroll);
+      };
+    }
+  }, [scrollElem, onScroll]);
+
   const label = (
-    <div className="translate-x-[10px] flex" style={{ height }}>
+    <div className="translate-x-[10px] flex">
       {/* Number labels */}
       <div className="relative">
         {gridLineYValues.map((y) => (
@@ -334,12 +335,6 @@ Sequence.Graph = function SequenceGraph({
             />
           ))}
       </svg>
-      {/* <button
-        onClick={zoomToIdeal}
-        className="absolute bottom-2 right-2 bg-white border rounded px-4 py-2 z-50"
-      >
-        Zoom
-      </button> */}
     </SequenceRow>
   );
 };
@@ -349,11 +344,8 @@ Sequence.Terms = function SequenceTerms({ height = 50, render, label }) {
 
   return (
     <SequenceRow
-      label={
-        <div style={{ height }} className="flex items-center px-2">
-          {label}
-        </div>
-      }
+      label={<div className="flex items-center px-2">{label}</div>}
+      height={height}
     >
       <div className="flex divide-x divide-gray-300">
         {nValues.map((n) => (
@@ -378,11 +370,8 @@ Sequence.Indicies = function SequenceIndicies({
 
   return (
     <SequenceRow
-      label={
-        <div style={{ height }} className="flex items-center px-2">
-          {label}
-        </div>
-      }
+      label={<div className="flex items-center px-2">{label}</div>}
+      height={height}
     >
       <div className="flex divide-x divide-blue-200">
         {nValues.map((n) => (
@@ -403,10 +392,12 @@ function SequenceScrollButton({ direction, ...props }) {
   return (
     <button
       className={classNames(
-        "absolute z-10 top-0 h-full w-20 from-gray-50 flex items-center",
+        "absolute z-10 top-px bottom-px w-20 from-gray-50 flex items-center",
         {
-          "left-0 bg-gradient-to-r justify-start": direction === "left",
-          "right-0 bg-gradient-to-l justify-end": direction === "right",
+          "left-px rounded-l-lg bg-gradient-to-r justify-start":
+            direction === "left",
+          "right-px rounded-r-lg bg-gradient-to-l justify-end":
+            direction === "right",
         }
       )}
       {...props}
