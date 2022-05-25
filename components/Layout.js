@@ -28,7 +28,7 @@ export function Layout({ children, title, tldr }) {
         {title && <title>{jsxToString(title)} | Clown School</title>}
         {!title && <title>Clown School</title>}
       </Head>
-      <div className="mb-8 relative xl:fixed xl:top-0 xl:left-0 xl:w-72 xl:h-full xl:px-8 xl:py-6 xl:m-0 xl:overflow-y-auto">
+      <div className="mb-8 xl:fixed xl:top-0 xl:left-0 xl:w-72 xl:h-full xl:px-8 xl:py-6 xl:m-0 xl:overflow-y-auto">
         <nav>
           <Link href="/what-is-a-sequence">
             <a className="block text-slate-900 font-semibold mb-2">Sequences</a>
