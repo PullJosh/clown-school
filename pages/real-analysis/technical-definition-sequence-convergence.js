@@ -22,9 +22,13 @@ export default function TechnicalDefinitionSequenceConvergence() {
       }
     >
       <p>
-        In the last lesson, we gained an intuitive sense of what it means for a
-        sequence to converge. ("I'll know it when I see it.") Now let's write a
-        more precise, mathematical definition of convergence that{" "}
+        In{" "}
+        <Link href="/real-analysis/sequence-converge-diverge-meaning">
+          <a>the last lesson</a>
+        </Link>
+        , we gained an intuitive sense of what it means for a sequence to
+        converge. ("I'll know it when I see it.") Now let's write a more
+        precise, mathematical definition of convergence that{" "}
         <Link href="/real-analysis/prove-sequence-convergence">
           <a>we can use</a>
         </Link>{" "}
