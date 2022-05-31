@@ -30,25 +30,33 @@ export function Layout({ children, title, tldr }) {
       </Head>
       <div className="mb-8 xl:fixed xl:top-0 xl:left-0 xl:w-72 xl:h-full xl:px-8 xl:py-6 xl:m-0 xl:overflow-y-auto">
         <nav>
-          <Link href="/what-is-a-sequence">
+          <SidebarLink href="/real-analysis">
+            What is real analysis?
+          </SidebarLink>
+          <Link href="/real-analysis/what-is-a-sequence">
             <a className="block text-slate-900 font-semibold mb-2">Sequences</a>
           </Link>
-          <SidebarLink href="/what-is-a-sequence">
+          <SidebarLink href="/real-analysis/what-is-a-sequence">
             What is a sequence?
           </SidebarLink>
-          <SidebarLink href="/sequence-converge-diverge-meaning">
+          <SidebarLink href="/real-analysis/sequence-converge-diverge-meaning">
             What does it mean for a sequence to <VocabTerm>converge</VocabTerm>{" "}
             or <VocabTerm>diverge</VocabTerm>?
           </SidebarLink>
+          <SidebarLink href="/real-analysis/technical-definition-sequence-convergence">
+            What is the technical definition of sequence{" "}
+            <VocabTerm>convergence</VocabTerm>?
+          </SidebarLink>
+          <SidebarLink href="/real-analysis/prove-sequence-convergence">
+            How do you prove that a sequence <VocabTerm>converges</VocabTerm>?
+          </SidebarLink>
         </nav>
       </div>
-      <div className="mb-6">
-        <h1 className="text-slate-900 font-extrabold text-3xl sm:text-4xl mb-2 text-left">
-          {title}
-        </h1>
-        {tldr && <div className="text-slate-500 sm:text-lg">tl;dr: {tldr}</div>}
+      <div className="prose prose-slate max-w-none">
+        <h1>{title}</h1>
+        {tldr && <div className="lead">tl;dr: {tldr}</div>}
+        {children}
       </div>
-      <div className="prose prose-slate max-w-none">{children}</div>
     </div>
   );
 }

@@ -7,3 +7,4 @@ import { createContext } from "react";
 // Moving this to a separate file fixes the issue.
 
 export const SequenceContext = createContext();
+export const SequenceGraphContext = createContext();

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import Link from "next/link";
-import { Latex } from "../components/Latex";
-import { MathInput } from "../components/MathInput";
+import { Latex } from "../../components/Latex";
+import { MathInput } from "../../components/MathInput";
 import evaluatex from "evaluatex/dist/evaluatex";
-import { Sequence } from "../components/Sequence";
-import { Layout } from "../components/Layout";
-import { Aside } from "../components/Aside";
-import { VocabTerm } from "../components/VocabTerm";
+import { Sequence } from "../../components/Sequence";
+import { Layout } from "../../components/Layout";
+import { Aside } from "../../components/Aside";
+import { VocabTerm } from "../../components/VocabTerm";
 
 export default function WhatIsASequence() {
   const [customSequenceValue, setCustomSequenceValue] = useState(
@@ -121,7 +121,9 @@ export default function WhatIsASequence() {
           <Latex value="\left( \frac{n}{n+1} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}" />
         }
       >
-        <Sequence.Graph fn={(n) => n / (n + 1)} />
+        <Sequence.Graph fn={(n) => n / (n + 1)}>
+          <Sequence.Graph.Points />
+        </Sequence.Graph>
         <Sequence.Terms
           height={88}
           render={renderPizzaTermBox}
@@ -136,10 +138,12 @@ export default function WhatIsASequence() {
         analysis, so keep your eyes peeled for graphs that look like this.
       </p>
       <Aside>
-        It makes sense that the sequence converges to 1, because for large{" "}
-        <Latex value="\textcolor{#1d4ed8}{n}" />, the terms become fractions
-        like <Latex value="\frac{999,999}{1,000,000}" />, which is pretty much
-        1.
+        <p>
+          It makes sense that the sequence converges to 1, because for large{" "}
+          <Latex value="\textcolor{#1d4ed8}{n}" />, the terms become fractions
+          like <Latex value="\frac{999,999}{1,000,000}" />, which is pretty much
+          1.
+        </p>
       </Aside>
       <h2 className="font-bold text-2xl sm:text-3xl mt-10 mb-2 text-left">
         Sequence Gallery
@@ -159,7 +163,9 @@ export default function WhatIsASequence() {
           columnWidth={20}
           allowScrolling={false}
         >
-          <Sequence.Graph fn={(n) => n} limit={0} height={200} />
+          <Sequence.Graph fn={(n) => n} limit={0} height={200}>
+            <Sequence.Graph.Points />
+          </Sequence.Graph>
         </Sequence>
         <Sequence
           title={
@@ -170,7 +176,9 @@ export default function WhatIsASequence() {
           columnWidth={20}
           allowScrolling={false}
         >
-          <Sequence.Graph fn={(n) => 1 / n} limit={0} height={200} />
+          <Sequence.Graph fn={(n) => 1 / n} limit={0} height={200}>
+            <Sequence.Graph.Points />
+          </Sequence.Graph>
         </Sequence>
         <Sequence
           title={
@@ -181,7 +189,9 @@ export default function WhatIsASequence() {
           columnWidth={20}
           allowScrolling={false}
         >
-          <Sequence.Graph fn={(n) => (-1) ** n} height={200} />
+          <Sequence.Graph fn={(n) => (-1) ** n} height={200}>
+            <Sequence.Graph.Points />
+          </Sequence.Graph>
         </Sequence>
         <Sequence
           title={
@@ -192,7 +202,9 @@ export default function WhatIsASequence() {
           columnWidth={20}
           allowScrolling={false}
         >
-          <Sequence.Graph fn={(n) => (-1) ** n / n} limit={0} height={200} />
+          <Sequence.Graph fn={(n) => (-1) ** n / n} limit={0} height={200}>
+            <Sequence.Graph.Points />
+          </Sequence.Graph>
         </Sequence>
       </div>
       <p>
@@ -210,6 +222,7 @@ export default function WhatIsASequence() {
         Of course! I can't show you all these examples without giving you the
         chance to build a sequence of your own.
       </p>
+      {/* TODO: Improve this (fix errors, improve paragraph before, add arrow to input?) */}
       <Sequence
         title={
           <MathInput
@@ -220,7 +233,9 @@ export default function WhatIsASequence() {
       >
         <Sequence.Graph
           fn={customSequenceFn ? (n) => customSequenceFn({ n }) : undefined}
-        />
+        >
+          <Sequence.Graph.Points />
+        </Sequence.Graph>
         <Sequence.Terms
           render={(n) => <Latex value={String.raw`\frac{${n}}{${n + 1}}`} />}
           label={<Latex value={customSequenceValue} />}

@@ -6,8 +6,10 @@ const colors = {
 
   "converging to a value": "text-purple-600",
   converge: "text-purple-600",
+  converges: "text-purple-600",
   convergent: "text-purple-600",
   converging: "text-purple-600",
+  convergence: "text-purple-600",
 
   "divergent to ±∞": "text-teal-600",
   "diverging to ±∞": "text-teal-600",
@@ -16,9 +18,10 @@ const colors = {
   "diverging to -∞": "text-teal-600",
 
   diverge: "text-green-600",
-  divergent: "text-green-600",
   diverges: "text-green-600",
+  divergent: "text-green-600",
   diverging: "text-green-600",
+  divergence: "text-green-600",
 };
 
 export function VocabTerm({ children, bold = false }) {

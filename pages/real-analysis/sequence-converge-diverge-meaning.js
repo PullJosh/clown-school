@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Layout } from "../components/Layout";
-import { ComingSoon } from "../components/ComingSoon";
-import { VocabTerm } from "../components/VocabTerm";
-import { Latex } from "../components/Latex";
-import { Sequence } from "../components/Sequence";
+import { Layout } from "../../components/Layout";
+import { ComingSoon } from "../../components/ComingSoon";
+import { VocabTerm } from "../../components/VocabTerm";
+import { Latex } from "../../components/Latex";
+import { Sequence } from "../../components/Sequence";
 
 export default function SequenceConvergeDivergeMeaning() {
   return (
@@ -17,19 +17,27 @@ export default function SequenceConvergeDivergeMeaning() {
       tldr="A sequence converges if it gets closer and closer to a certain number. Otherwise, it diverges."
     >
       <p>
-        Below are six different sequences and two bins labelled{" "}
-        <VocabTerm bold>convergent</VocabTerm> and{" "}
-        <VocabTerm bold>divergent</VocabTerm>. Your job is to categorize the
-        sequences into the bins correctly. We haven't defined these terms yet,
-        but you should try to guess what they mean. Don't worry&mdash;you'll get
-        a chance to correct any mistakes. It's all trial and error for now.
+        In the previous section we looked at the pizza sequence,{" "}
+        <Latex
+          value={String.raw`\left( \frac{n}{n+1} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}`}
+        />
+        , and noticed that as{" "}
+        <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} /> gets larger, the
+        sequence terms get closer and closer to 1. This is called{" "}
+        <VocabTerm bold>convergence</VocabTerm>, and it's a crucial concept in
+        analysis.
       </p>
-      <ComingSoon>
-        Drag-and-drop the sequences (3 - 1/n), ((-1)^n/n), (n^2), (-n), (sin(n /
-        10)), and ((-1)^n * n) into the correct bins. Check your answers, then
-        correct any mistakes. Repeat until all are correct.
-      </ComingSoon>
-      <p>Alright. What do these terms actually mean?</p>
+      <p>
+        In this lesson we will get a feel for{" "}
+        <VocabTerm bold>convergence</VocabTerm> (and its opposite,{" "}
+        <VocabTerm bold>divergence</VocabTerm>) by looking at examples and
+        playing a categorization game. In{" "}
+        <Link href="/real-analysis/prove-sequence-convergence">
+          <a>the next lesson</a>
+        </Link>
+        , we will write a more precise mathematical definition of convergence
+        and begin to prove, rigorously, that sequences converge or diverge.
+      </p>
       <div className="relative pt-px">
         <div className="absolute top-0 left-1/2 ml-[-50vw] -z-50 w-screen h-1/2 bg-gradient-to-b from-purple-50" />
         <h2>
@@ -43,7 +51,7 @@ export default function SequenceConvergeDivergeMeaning() {
           essentially become a horizontal line as{" "}
           <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} /> gets large.
           (We'll give{" "}
-          <Link href="/">
+          <Link href="/real-analysis/prove-sequence-convergence">
             <a>a more technical definition</a>
           </Link>{" "}
           soon.)
@@ -63,7 +71,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph fn={(n) => 1 / n} limit={0} height={200} />
+              <Sequence.Graph fn={(n) => 1 / n} limit={0} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This is an extremely common converging sequence that is very
@@ -84,11 +94,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph
-                fn={(n) => (-1) ** n / n}
-                limit={0}
-                height={200}
-              />
+              <Sequence.Graph fn={(n) => (-1) ** n / n} limit={0} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This sequence alternates positive/negative, but it still{" "}
@@ -108,7 +116,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph fn={(n) => 5 + 1 / n} limit={5} height={200} />
+              <Sequence.Graph fn={(n) => 5 + 1 / n} limit={5} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This sequences{" "}
@@ -133,7 +143,9 @@ export default function SequenceConvergeDivergeMeaning() {
                 fn={(n) => (4 * n) / (n + 2)}
                 limit={4}
                 height={200}
-              />
+              >
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This sequence{" "}
@@ -155,7 +167,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph fn={(n) => -3} limit={-3} height={200} />
+              <Sequence.Graph fn={(n) => -3} limit={-3} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This is the constant sequence -3, and we say that it{" "}
@@ -178,11 +192,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph
-                fn={(n) => Math.min(n, 7)}
-                limit={7}
-                height={200}
-              />
+              <Sequence.Graph fn={(n) => Math.min(n, 7)} limit={7} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               The min function chooses the smallest option from a set. So if n
@@ -286,7 +298,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph fn={(n) => -(n ** 2)} limit={0} height={200} />
+              <Sequence.Graph fn={(n) => -(n ** 2)} limit={0} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This sequence{" "}
@@ -306,7 +320,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph fn={(n) => Math.sqrt(n)} limit={0} height={200} />
+              <Sequence.Graph fn={(n) => Math.sqrt(n)} limit={0} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This sequence{" "}
@@ -330,7 +346,9 @@ export default function SequenceConvergeDivergeMeaning() {
                 fn={(n) => n + 2 * Math.sin(n)}
                 limit={0}
                 height={200}
-              />
+              >
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This wiggly sequence{" "}
@@ -353,7 +371,9 @@ export default function SequenceConvergeDivergeMeaning() {
                 fn={(n) => 5 - Math.abs(n - 5)}
                 limit={0}
                 height={200}
-              />
+              >
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This sequence starts by going up, but then changes course and goes
@@ -407,7 +427,9 @@ export default function SequenceConvergeDivergeMeaning() {
                 fn={(n) => Math.sin(n / 2)}
                 limit={0}
                 height={200}
-              />
+              >
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This sequence goes up and down forever, never converging to any
@@ -424,7 +446,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph fn={(n) => (-1) ** n} limit={0} height={200} />
+              <Sequence.Graph fn={(n) => (-1) ** n} limit={0} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This sequence alternates between -1 and 1 perpetually, never
@@ -442,11 +466,9 @@ export default function SequenceConvergeDivergeMeaning() {
               columnWidth={20}
               allowScrolling={false}
             >
-              <Sequence.Graph
-                fn={(n) => (-1) ** n * n}
-                limit={0}
-                height={200}
-              />
+              <Sequence.Graph fn={(n) => (-1) ** n * n} limit={0} height={200}>
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This one sort of diverges to both ∞ and -∞. But since we don't
@@ -467,7 +489,9 @@ export default function SequenceConvergeDivergeMeaning() {
               <Sequence.Graph
                 fn={(n) => Math.floor(Math.PI * 10 ** (n - 1)) % 10}
                 height={200}
-              />
+              >
+                <Sequence.Graph.Points />
+              </Sequence.Graph>
             </Sequence>
             <p className="leading-normal mt-1">
               This one is extremely dumb. It is the sequence 3, 1, 4, 1, 5, 9...
