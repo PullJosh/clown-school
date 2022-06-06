@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Layout } from "../../components/Layout";
 import { Latex } from "../../components/Latex";
 import {
@@ -6,15 +7,15 @@ import {
   TextMessage,
 } from "../../components/TextConversation";
 
+import newtonImg from "../../public/newton.png";
+
 export default function WhatIsRealAnalysis() {
   return (
     <Layout title="What is real analysis?">
       <div className="not-prose">
-        <img
-          className="float-right w-48 hover:animate-spin"
-          src="/newton.png"
-          alt="Isaac Newton"
-        />
+        <div className="float-right w-48 hover:animate-spin">
+          <Image src={newtonImg} alt="Isaac Newton" />
+        </div>
       </div>
       <p className="lead">
         In 1665, Isaac Newton invented calculus. In 1727, he died a virgin.{" "}

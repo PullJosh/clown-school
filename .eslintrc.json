@@ -1,0 +1,9 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    // react/no-unescaped-entities prevents quotes and
+    // apostrophes in JSX, which is too annoying to
+    // leave on when writing pages of text in JSX.
+    "react/no-unescaped-entities": "off"
+  }
+}

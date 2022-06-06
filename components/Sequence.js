@@ -87,7 +87,7 @@ export const Sequence = forwardRef(function Sequence(
     if (scrollElem && allowScrolling) {
       scrollElem.scrollTo({ left: 0, behavior: "smooth" });
     }
-  }, [scrollElem]);
+  }, [allowScrolling, scrollElem]);
 
   const onClickScrollRight = useCallback(() => {
     if (scrollElem && allowScrolling) {
@@ -287,33 +287,36 @@ Sequence.Graph = function SequenceGraph({
   const [minY, setMinY] = useState(idealMinY);
   const [maxY, setMaxY] = useState(idealMaxY);
 
-  const zoomToIdeal = (instant = false) => {
-    if (instant) {
-      setMinY(idealMinY);
-      setMaxY(idealMaxY);
-      return;
-    }
-
-    const startTime = Date.now();
-    const duration = 400;
-    function update() {
-      let progress = (Date.now() - startTime) / duration;
-      if (progress > 1) {
-        progress = 1;
-      } else {
-        requestAnimationFrame(update);
+  const zoomToIdeal = useCallback(
+    (instant = false) => {
+      if (instant) {
+        setMinY(idealMinY);
+        setMaxY(idealMaxY);
+        return;
       }
 
-      const easeInOut = (t) =>
-        t < 0.5 ? 4 * t ** 3 : 1 - (2 - 2 * t) ** 3 / 2;
-      const easedProgress = easeInOut(progress);
+      const startTime = Date.now();
+      const duration = 400;
+      function update() {
+        let progress = (Date.now() - startTime) / duration;
+        if (progress > 1) {
+          progress = 1;
+        } else {
+          requestAnimationFrame(update);
+        }
 
-      setMinY(minY + (idealMinY - minY) * easedProgress);
-      setMaxY(maxY + (idealMaxY - maxY) * easedProgress);
-    }
+        const easeInOut = (t) =>
+          t < 0.5 ? 4 * t ** 3 : 1 - (2 - 2 * t) ** 3 / 2;
+        const easedProgress = easeInOut(progress);
 
-    requestAnimationFrame(update);
-  };
+        setMinY(minY + (idealMinY - minY) * easedProgress);
+        setMaxY(maxY + (idealMaxY - maxY) * easedProgress);
+      }
+
+      requestAnimationFrame(update);
+    },
+    [idealMaxY, idealMinY, maxY, minY]
+  );
 
   const getScreenY = (y) => {
     return height * (1 - (y - minY) / (maxY - minY));
@@ -349,7 +352,7 @@ Sequence.Graph = function SequenceGraph({
     if (timeoutRef.current === null) {
       zoomToIdeal(true);
     }
-  }, [idealMinY, idealMaxY]);
+  }, [idealMinY, idealMaxY, zoomToIdeal]);
 
   useEffect(() => {
     if (scrollElem) {
@@ -509,8 +512,9 @@ Sequence.Graph.Tube = function SequenceGraphTube({
           y={getScreenY(center + radius)}
           className="fill-purple-500/20"
         />
-        {[center + radius, center - radius].map((y) => (
+        {[center + radius, center - radius].map((y, index) => (
           <line
+            key={index}
             x1={0}
             x2={width}
             y1={getScreenY(y)}
@@ -609,6 +613,7 @@ Sequence.Graph.BigNLabel = function SequenceGraphBigNLabel({
       />
       {[-1, 1].map((sign) => (
         <line
+          key={sign}
           x1={x + 5 * sign}
           x2={x}
           y1={height - 15}
@@ -920,7 +925,7 @@ function useDragAndDrop(trackValue, callback) {
         );
       }
     },
-    [trackValue, dragStart]
+    [dragStart, callback]
   );
 
   const onMouseUp = useCallback(
@@ -934,7 +939,7 @@ function useDragAndDrop(trackValue, callback) {
         setDragStart(null);
       }
     },
-    [trackValue, dragStart]
+    [dragStart, callback]
   );
 
   useEffect(() => {
@@ -944,7 +949,7 @@ function useDragAndDrop(trackValue, callback) {
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     };
-  }, [onMouseMove, onMouseDown]);
+  }, [onMouseMove, onMouseUp]);
 
   return onMouseDown;
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Latex } from "../../components/Latex";
 import { MathInput } from "../../components/MathInput";
 import evaluatex from "evaluatex/dist/evaluatex";
@@ -7,6 +8,8 @@ import { Sequence } from "../../components/Sequence";
 import { Layout } from "../../components/Layout";
 import { Aside } from "../../components/Aside";
 import { VocabTerm } from "../../components/VocabTerm";
+
+import rightArrowImg from "../../public/right-arrow.svg";
 
 export default function WhatIsASequence() {
   const [customSequenceValue, setCustomSequenceValue] = useState(
@@ -24,6 +27,7 @@ export default function WhatIsASequence() {
       }
     };
   } catch (e) {
+    // eslint-disable-next-line react/display-name
     customSequenceFn = () => null;
   }
 
@@ -236,11 +240,9 @@ export default function WhatIsASequence() {
       <Sequence
         title={
           <>
-            <img
-              className="absolute -top-8 -left-4 -translate-x-full w-64 pointer-events-none select-none"
-              src="/right-arrow.svg"
-              alt=""
-            />
+            <div className="absolute -top-2 -left-4 -translate-x-full w-48 pointer-events-none select-none">
+              <Image src={rightArrowImg} alt="" />
+            </div>
             <MathInput
               defaultValue={customSequenceValue}
               onChange={(newValue) => setCustomSequenceValue(newValue)}

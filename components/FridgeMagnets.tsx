@@ -86,7 +86,7 @@ export function FridgeMagnets({ options, children }: FridgeMagnetsProps) {
               .filter((magnet) => magnet.slot === "pool")
               .map((magnet) => (
                 <span className="inline-block m-2" key={magnet.key}>
-                  <FridgeMagnet
+                  <DraggableFridgeMagnet
                     type={magnet.type}
                     currentLocation="pool"
                     rotate="random"
@@ -94,7 +94,7 @@ export function FridgeMagnets({ options, children }: FridgeMagnetsProps) {
                     setHighlightedSlot={setHighlightedSlot}
                   >
                     {magnet.content}
-                  </FridgeMagnet>
+                  </DraggableFridgeMagnet>
                 </span>
               ))}
           </div>
@@ -104,7 +104,7 @@ export function FridgeMagnets({ options, children }: FridgeMagnetsProps) {
   );
 }
 
-interface FridgeMagnetProps {
+interface DraggableFridgeMagnetProps {
   children: ReactNode;
   type: MagnetType;
   rotate?: "random" | -2 | -1 | 0 | 1 | 2;
@@ -113,14 +113,14 @@ interface FridgeMagnetProps {
   setHighlightedSlot: (slotId: SlotId | null) => void;
 }
 
-function FridgeMagnet({
+function DraggableFridgeMagnet({
   children,
   type,
   rotate = 0,
   currentLocation,
   moveMagnet,
   setHighlightedSlot,
-}: FridgeMagnetProps) {
+}: DraggableFridgeMagnetProps) {
   const [randomRotationSelection] = useState<-2 | -1 | 0 | 1 | 2>(
     Math.floor(Math.random() * 5 - 2) as any
   );
@@ -152,42 +152,43 @@ function FridgeMagnet({
     return [touch.clientX, touch.clientY];
   }
 
-  function getNearestSlot(
-    event: MouseEvent | React.MouseEvent | TouchEvent | React.TouchEvent
-  ) {
-    return (
-      [...document.querySelectorAll(".FridgeMagnetSlot")]
-        .map((slot) => {
-          let id: string | null = slot.getAttribute("data-slotid");
-          if (!id) {
-            throw new Error("data-slotid attribute missing");
-          }
-          let parsedId: string | number = id;
-          if (!isNaN(+id) && !isNaN(parseFloat(id))) {
-            parsedId = Number(id);
-          }
-          return { slot, id: parsedId };
-        })
-        .filter(({ slot }) => slot.getAttribute("data-filled") === "false")
-        .filter(
-          ({ slot }) =>
-            slot.getAttribute("data-type") === type ||
-            slot.getAttribute("data-type") === null
-        )
-        .filter(
-          ({ slot }) => slot.getAttribute("data-slotid") !== currentLocation
-        )
-        .map(({ slot, id }) => {
-          const rect = slot.getBoundingClientRect();
-          const [mouseX, mouseY] = getMouseCoords(event);
-          return {
-            dist: distanceToRect(rect, mouseX, mouseY),
-            id,
-          };
-        })
-        .sort((a, b) => a.dist - b.dist)[0] ?? null
-    );
-  }
+  const getNearestSlot = useCallback(
+    (event: MouseEvent | React.MouseEvent | TouchEvent | React.TouchEvent) => {
+      return (
+        [...document.querySelectorAll(".FridgeMagnetSlot")]
+          .map((slot) => {
+            let id: string | null = slot.getAttribute("data-slotid");
+            if (!id) {
+              throw new Error("data-slotid attribute missing");
+            }
+            let parsedId: string | number = id;
+            if (!isNaN(+id) && !isNaN(parseFloat(id))) {
+              parsedId = Number(id);
+            }
+            return { slot, id: parsedId };
+          })
+          .filter(({ slot }) => slot.getAttribute("data-filled") === "false")
+          .filter(
+            ({ slot }) =>
+              slot.getAttribute("data-type") === type ||
+              slot.getAttribute("data-type") === null
+          )
+          .filter(
+            ({ slot }) => slot.getAttribute("data-slotid") !== currentLocation
+          )
+          .map(({ slot, id }) => {
+            const rect = slot.getBoundingClientRect();
+            const [mouseX, mouseY] = getMouseCoords(event);
+            return {
+              dist: distanceToRect(rect, mouseX, mouseY),
+              id,
+            };
+          })
+          .sort((a, b) => a.dist - b.dist)[0] ?? null
+      );
+    },
+    [type, currentLocation]
+  );
 
   interface DragStart {
     mouseX: number;
@@ -216,7 +217,7 @@ function FridgeMagnet({
 
       setDragValue({ offsetX: 0, offsetY: 0, nearestSlot });
     },
-    []
+    [getNearestSlot, setHighlightedSlot]
   );
 
   const onMouseMove = useCallback(
@@ -239,7 +240,7 @@ function FridgeMagnet({
         });
       }
     },
-    [dragStart]
+    [dragStart, getNearestSlot, setHighlightedSlot]
   );
 
   const onMouseUp = useCallback(() => {
@@ -251,7 +252,7 @@ function FridgeMagnet({
       setDragStart(null);
       setDragValue(null);
     }
-  }, [dragStart, dragValue]);
+  }, [dragStart, dragValue, moveMagnet, setHighlightedSlot]);
 
   useEffect(() => {
     document.addEventListener("mousemove", onMouseMove);
@@ -274,25 +275,55 @@ function FridgeMagnet({
           : undefined,
       }}
     >
-      <div
+      <FridgeMagnet
         onMouseDown={onMouseDown}
         onTouchStart={onMouseDown}
-        className={classNames(
-          "inline-block bg-white shadow py-1 whitespace-nowrap cursor-move select-none",
-          {
-            "px-2": type === "box",
-            "rounded-full px-3": type === "round",
-            "-rotate-2": rotate === -2,
-            "-rotate-1": rotate === -1,
-            "rotate-0": rotate === 0,
-            "rotate-1": rotate === 1,
-            "rotate-2": rotate === 2,
-            "z-30": dragStart,
-          }
-        )}
+        type={type}
+        rotation={rotate}
+        draggable={true}
+        className={classNames({ "z-30": !!dragStart })}
       >
         {children}
-      </div>
+      </FridgeMagnet>
+    </div>
+  );
+}
+
+interface FridgeMagnetProps {
+  children: ReactNode;
+  type?: MagnetType;
+  rotation?: -2 | -1 | 0 | 1 | 2;
+  draggable?: boolean;
+  className?: string;
+  [key: string]: any;
+}
+
+function FridgeMagnet({
+  children,
+  type = "box",
+  rotation = 0,
+  draggable = false,
+  className,
+  ...props
+}: FridgeMagnetProps) {
+  return (
+    <div
+      {...props}
+      className={classNames(
+        className,
+        "inline-block bg-white shadow py-1 whitespace-nowrap cursor-move select-none",
+        {
+          "px-2": type === "box",
+          "rounded-full px-3": type === "round",
+          "-rotate-2": rotation === -2,
+          "-rotate-1": rotation === -1,
+          "rotate-0": rotation === 0,
+          "rotate-1": rotation === 1,
+          "rotate-2": rotation === 2,
+        }
+      )}
+    >
+      {children}
     </div>
   );
 }
@@ -328,14 +359,14 @@ export function FridgeMagnetSlot({ id, type = "box" }: FridgeMagnetSlotProps) {
       data-type={type}
     >
       {magnet ? (
-        <FridgeMagnet
+        <DraggableFridgeMagnet
           type={magnet.type}
           currentLocation={id}
           moveMagnet={(newSlot: SlotId) => moveMagnet(magnet.key, newSlot)}
           setHighlightedSlot={setHighlightedSlot}
         >
           {magnet.content}
-        </FridgeMagnet>
+        </DraggableFridgeMagnet>
       ) : (
         <span className="invisible">
           <FridgeMagnet>Empty space</FridgeMagnet>

@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Layout } from "../../components/Layout";
 import { VocabTerm } from "../../components/VocabTerm";
 import { Latex } from "../../components/Latex";
@@ -9,6 +10,9 @@ import {
   FridgeMagnets,
   FridgeMagnetSlot,
 } from "../../components/FridgeMagnets";
+
+import inflatableTubeManImg from "../../public/inflatable-tube-man.png";
+import tubularTerminologyImg from "../../public/tubular-terminology.jpeg";
 
 export default function TechnicalDefinitionSequenceConvergence() {
   const [tubeRadius, setTubeRadius] = useState("0.5");
@@ -41,12 +45,8 @@ export default function TechnicalDefinitionSequenceConvergence() {
         along the sequence to a larger{" "}
         <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} /> value.
       </p>
-      <div className="not-prose">
-        <img
-          className="float-right ml-6 h-48"
-          src="/inflatable-tube-man.png"
-          alt="Purple inflatable tube man"
-        />
+      <div className="not-prose float-right ml-6 w-20">
+        <Image src={inflatableTubeManImg} alt="Purple inflatable tube man" />
       </div>
       <p>
         For example, if you want{" "}
@@ -269,11 +269,12 @@ export default function TechnicalDefinitionSequenceConvergence() {
       </div>
 
       <h2>Make it mathy</h2>
-      <img
-        className="w-56 ml-8 float-right -rotate-2 hover:rotate-6 hover:scale-110"
-        src="/tubular-terminology.jpeg"
-        alt="80s aesthetic text that says 'Totally Tubular Terminology'"
-      />
+      <div className="w-56 ml-8 float-right -rotate-2 hover:rotate-6 hover:scale-110">
+        <Image
+          src={tubularTerminologyImg}
+          alt="80s aesthetic text that says 'Totally Tubular Terminology'"
+        />
+      </div>
       <p>
         Amazing! You've successfully built a definition of sequence{" "}
         <VocabTerm bold>convergence</VocabTerm>. But our current tube
