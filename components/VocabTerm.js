@@ -3,6 +3,7 @@ import classNames from "classnames";
 const colors = {
   labeled: "text-blue-700",
   "indexed by": "text-blue-700",
+  index: "text-blue-700",
 
   "converging to a value": "text-purple-600",
   converge: "text-purple-600",
@@ -30,7 +31,7 @@ export function VocabTerm({ children, bold = false }) {
       className={classNames(
         "not-italic",
         { "font-semibold": bold },
-        colors[children]
+        colors[children.toLowerCase()]
       )}
     >
       {children}

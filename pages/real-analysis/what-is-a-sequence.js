@@ -15,16 +15,21 @@ export default function WhatIsASequence() {
 
   let customSequenceFn;
   try {
-    customSequenceFn = evaluatex(customSequenceValue, {}, { latex: true });
+    const fn = evaluatex(customSequenceValue, {}, { latex: true });
+    customSequenceFn = (n) => {
+      try {
+        return fn({ n });
+      } catch (e) {
+        return null;
+      }
+    };
   } catch (e) {
-    customSequenceFn = null;
+    customSequenceFn = () => null;
   }
 
   return (
-    <Layout
-      title="What is a sequence?"
-      tldr="A sequence is an infinitely long list of numbers."
-    >
+    <Layout title="What is a sequence?">
+      <p className="lead">A sequence is an infinitely long list of numbers.</p>
       <p>
         Take a look at this <strong>sequence</strong> of fractions:
       </p>
@@ -121,7 +126,7 @@ export default function WhatIsASequence() {
           <Latex value="\left( \frac{n}{n+1} \right)_{\textcolor{#1d4ed8}{n \in \mathbb{N}}}" />
         }
       >
-        <Sequence.Graph fn={(n) => n / (n + 1)}>
+        <Sequence.Graph fn={(n) => n / (n + 1)} keepInView={[1]}>
           <Sequence.Graph.Points />
         </Sequence.Graph>
         <Sequence.Terms
@@ -210,7 +215,7 @@ export default function WhatIsASequence() {
       <p>
         If you had to classify these sequences into categories, how might you
         divide them up? (In{" "}
-        <Link href="/sequence-converge-diverge-meaning">
+        <Link href="/real-analysis/sequence-converge-diverge-meaning">
           <a>the next section</a>
         </Link>
         , we will discuss one way that mathematicians classify sequences.)
@@ -222,18 +227,28 @@ export default function WhatIsASequence() {
         Of course! I can't show you all these examples without giving you the
         chance to build a sequence of your own.
       </p>
+      <p>
+        Enter an expression using{" "}
+        <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} /> into the box below
+        to create a sequence.
+      </p>
       {/* TODO: Improve this (fix errors, improve paragraph before, add arrow to input?) */}
       <Sequence
         title={
-          <MathInput
-            defaultValue={customSequenceValue}
-            onChange={(newValue) => setCustomSequenceValue(newValue)}
-          />
+          <>
+            <img
+              className="absolute -top-8 -left-4 -translate-x-full w-64 pointer-events-none select-none"
+              src="/right-arrow.svg"
+              alt=""
+            />
+            <MathInput
+              defaultValue={customSequenceValue}
+              onChange={(newValue) => setCustomSequenceValue(newValue)}
+            />
+          </>
         }
       >
-        <Sequence.Graph
-          fn={customSequenceFn ? (n) => customSequenceFn({ n }) : undefined}
-        >
+        <Sequence.Graph fn={customSequenceFn}>
           <Sequence.Graph.Points />
         </Sequence.Graph>
         <Sequence.Terms

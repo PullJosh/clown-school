@@ -14,8 +14,11 @@ export default function SequenceConvergeDivergeMeaning() {
           <VocabTerm>diverge</VocabTerm>?
         </>
       }
-      tldr="A sequence converges if it gets closer and closer to a certain number. Otherwise, it diverges."
     >
+      <p className="lead">
+        A sequence converges if it gets closer and closer to a certain number.
+        Otherwise, it diverges.
+      </p>
       <p>
         In the previous section we looked at the pizza sequence,{" "}
         <Latex
@@ -30,9 +33,8 @@ export default function SequenceConvergeDivergeMeaning() {
       <p>
         In this lesson we will get a feel for{" "}
         <VocabTerm bold>convergence</VocabTerm> (and its opposite,{" "}
-        <VocabTerm bold>divergence</VocabTerm>) by looking at examples and
-        playing a categorization game. In{" "}
-        <Link href="/real-analysis/prove-sequence-convergence">
+        <VocabTerm bold>divergence</VocabTerm>) by looking at examples. In{" "}
+        <Link href="/real-analysis/technical-definition-sequence-convergence">
           <a>the next lesson</a>
         </Link>
         , we will write a more precise mathematical definition of convergence
@@ -45,10 +47,10 @@ export default function SequenceConvergeDivergeMeaning() {
         </h2>
         <p>
           A <VocabTerm bold>convergent</VocabTerm> sequence is one that gets
-          super duper close to a certain number (called the "limit" of the
-          sequence) as <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} /> gets
-          bigger. Visually, this means that the terms all get really close and
-          essentially become a horizontal line as{" "}
+          infinitely close to a certain number&mdash;called the "limit" of the
+          sequence&mdash;as <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} />{" "}
+          gets bigger. Visually, this means that the terms all get really close
+          and essentially become a horizontal line as{" "}
           <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} /> gets large.
           (We'll give{" "}
           <Link href="/real-analysis/prove-sequence-convergence">

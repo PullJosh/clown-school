@@ -1,8 +1,10 @@
+import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { VocabTerm } from "./VocabTerm";
+import { Latex } from "./Latex";
 
 function SidebarLink({ href, children }) {
   const router = useRouter();
@@ -11,8 +13,8 @@ function SidebarLink({ href, children }) {
   return (
     <Link href={href}>
       <a
-        className={classNames("block border-l px-4 py-1", {
-          "border-slate-900 font-medium": isActive,
+        className={classNames("block px-6 py-2", {
+          "bg-slate-100 border-l-2 border-slate-800 -ml-[2px]": isActive,
         })}
       >
         {children}
@@ -21,42 +23,124 @@ function SidebarLink({ href, children }) {
   );
 }
 
-export function Layout({ children, title, tldr }) {
+export function Layout({ children, title }) {
   return (
-    <div className="max-w-3xl mx-auto p-8 relative">
+    <div className="pl-[300px]">
       <Head>
         {title && <title>{jsxToString(title)} | Clown School</title>}
         {!title && <title>Clown School</title>}
       </Head>
-      <div className="mb-8 xl:fixed xl:top-0 xl:left-0 xl:w-72 xl:h-full xl:px-8 xl:py-6 xl:m-0 xl:overflow-y-auto">
-        <nav>
+      <div className="fixed top-0 left-0 h-screen w-[300px] flex flex-col bg-white border-r border-slate-200">
+        <div className="bg-white border-b border-slate-200 flex items-center space-x-4">
+          <svg viewBox="0 0 64 64" className="w-16 h-16">
+            <text
+              x={33}
+              y={36}
+              fontSize={36}
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              🤡
+            </text>
+          </svg>
+          <h1 className="font-semibold text-2xl">
+            <span className="text-rose-700">Clown</span>.school
+          </h1>
+        </div>
+        <nav className="relative flex-1 overflow-hidden">
+          <h1 className="px-6 py-2 bg-white shadow font-bold mb-4">
+            Real Analysis
+          </h1>
           <SidebarLink href="/real-analysis">
             What is real analysis?
           </SidebarLink>
-          <Link href="/real-analysis/what-is-a-sequence">
-            <a className="block text-slate-900 font-semibold mb-2">Sequences</a>
-          </Link>
-          <SidebarLink href="/real-analysis/what-is-a-sequence">
-            What is a sequence?
-          </SidebarLink>
-          <SidebarLink href="/real-analysis/sequence-converge-diverge-meaning">
-            What does it mean for a sequence to <VocabTerm>converge</VocabTerm>{" "}
-            or <VocabTerm>diverge</VocabTerm>?
-          </SidebarLink>
-          <SidebarLink href="/real-analysis/technical-definition-sequence-convergence">
-            What is the technical definition of sequence{" "}
-            <VocabTerm>convergence</VocabTerm>?
-          </SidebarLink>
-          <SidebarLink href="/real-analysis/prove-sequence-convergence">
-            How do you prove that a sequence <VocabTerm>converges</VocabTerm>?
-          </SidebarLink>
+
+          <h2 className="px-6 py-2 font-bold text-slate-800">Sequences</h2>
+          <div className="ml-6 border-l-2 border-slate-200">
+            <SidebarLink href="/real-analysis/what-is-a-sequence">
+              What is a sequence?
+            </SidebarLink>
+            <SidebarLink href="/real-analysis/sequence-converge-diverge-meaning">
+              <VocabTerm>Convergence</VocabTerm> and{" "}
+              <VocabTerm>divergence</VocabTerm>
+            </SidebarLink>
+            {/* <img
+            src="/inflatable-tube-man.png"
+            alt=""
+            className="absolute w-14 -right-4 -rotate-45 pointer-events-none select-none"
+          /> */}
+            <SidebarLink href="/real-analysis/technical-definition-sequence-convergence">
+              Definition of <VocabTerm>convergence</VocabTerm>
+            </SidebarLink>
+            <SidebarLink href="/real-analysis/prove-sequence-convergence">
+              Proving <VocabTerm>convergence</VocabTerm>
+            </SidebarLink>
+            <SidebarLink href="#">
+              Definition of <VocabTerm>divergence</VocabTerm>
+            </SidebarLink>
+            <SidebarLink href="#">
+              Proving <VocabTerm>divergence</VocabTerm>
+            </SidebarLink>
+            <SidebarLink href="#">Tails and subsequences</SidebarLink>
+            <SidebarLink href="#">Squeeze theorem</SidebarLink>
+            <SidebarLink href="#">Limit arithmetic</SidebarLink>
+            <SidebarLink href="#">Ratio test</SidebarLink>
+            <SidebarLink href="#">Cauchy sequences</SidebarLink>
+          </div>
         </nav>
       </div>
-      <div className="prose prose-slate max-w-none">
-        <h1>{title}</h1>
-        {tldr && <div className="lead">tl;dr: {tldr}</div>}
-        {children}
-      </div>
+      <main>
+        {/* <div className="sticky top-0 bg-white z-40">
+          <header className="border-b border-slate-200">
+            <div className="h-16 px-24 flex items-center">
+              <form
+                action="https://google.com/search"
+                className="flex-1 max-w-prose flex bg-slate-100 rounded focus-within:bg-slate-200"
+              >
+                <input
+                  type="hidden"
+                  name="as_sitesearch"
+                  value="clown-school.vercel.app"
+                />
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search..."
+                  className="w-full px-4 py-2 bg-transparent rounded focus:outline-none"
+                  required
+                />
+                <button type="submit">
+                  <svg viewBox="0 0 40 40" className="w-10 h-10">
+                    <circle
+                      cx={17}
+                      cy={17}
+                      r={7}
+                      strokeWidth={2}
+                      className="stroke-slate-500"
+                      fill="none"
+                    />
+                    <line
+                      x1={22}
+                      x2={29}
+                      y1={22}
+                      y2={29}
+                      strokeWidth={2}
+                      className="stroke-slate-500"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              </form>
+            </div>
+          </header>
+        </div> */}
+        <div className="px-24">
+          <div className="prose prose-slate py-12 relative">
+            <h1>{title}</h1>
+            {children}
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

@@ -262,7 +262,7 @@ function SequenceRow({
 }
 
 Sequence.Graph = function SequenceGraph({
-  fn = null,
+  fn = () => null,
   height = 300,
   limit = null,
   keepInView = [],
@@ -276,14 +276,13 @@ Sequence.Graph = function SequenceGraph({
     (_, i) => hiddenCount + i + 1
   );
 
-  let idealMinY = -1;
-  let idealMaxY = 1;
-  if (fn) {
-    [idealMinY, idealMaxY] = getIdealVerticalWindow(
-      [...visibleNValues.map((n) => fn(n)), ...keepInView],
-      limit
-    );
-  }
+  let [idealMinY, idealMaxY] = getIdealVerticalWindow(
+    [
+      ...visibleNValues.map((n) => fn(n)).filter((v) => v !== null),
+      ...keepInView,
+    ],
+    limit
+  );
 
   const [minY, setMinY] = useState(idealMinY);
   const [maxY, setMaxY] = useState(idealMaxY);
@@ -560,20 +559,28 @@ Sequence.Graph.Points = function SequenceGraphPoints({ pointColor }) {
 
   return (
     <Sequence.Graph.Layer>
-      {nValues.map((n, index) => (
-        <circle
-          key={n}
-          cx={columnWidth * (index + 0.5)}
-          cy={getScreenY(fn(n))}
-          r={5}
-          className={classNames("pointer-events-none", getPointColor(n))}
-        />
-      ))}
+      {nValues.map((n, index) => {
+        const y = fn(n);
+        if (y === null) return null;
+
+        return (
+          <circle
+            key={n}
+            cx={columnWidth * (index + 0.5)}
+            cy={getScreenY(y)}
+            r={5}
+            className={classNames("pointer-events-none", getPointColor(n))}
+          />
+        );
+      })}
     </Sequence.Graph.Layer>
   );
 };
 
-Sequence.Graph.BigNLabel = function SequenceGraphBigNLabel({ N }) {
+Sequence.Graph.BigNLabel = function SequenceGraphBigNLabel({
+  N,
+  showN = true,
+}) {
   const { columnWidth, virtualizedCount } = useContext(SequenceContext);
   const { height } = useContext(SequenceGraphContext);
 
@@ -581,14 +588,16 @@ Sequence.Graph.BigNLabel = function SequenceGraphBigNLabel({ N }) {
 
   return (
     <Sequence.Graph.Layer>
-      <foreignObject x={x - 15} y={height - 65} width={30} height={35}>
-        <div
-          xmlns="http://www.w3.org/1999/xhtml"
-          style={{ textAlign: "center", fontSize: "20px" }}
-        >
-          <Latex value={String.raw`\textcolor{#1d4ed8}{N}`} />
-        </div>
-      </foreignObject>
+      {showN && (
+        <foreignObject x={x - 15} y={height - 65} width={30} height={35}>
+          <div
+            xmlns="http://www.w3.org/1999/xhtml"
+            style={{ textAlign: "center", fontSize: "20px" }}
+          >
+            <Latex value={String.raw`\textcolor{#1d4ed8}{N}`} />
+          </div>
+        </foreignObject>
+      )}
       <line
         x1={x}
         x2={x}
@@ -820,6 +829,10 @@ function SequenceScrollButton({ direction, toN, toNLatex, ...props }) {
 }
 
 function getIdealVerticalWindow(values, centerValue = null) {
+  if (values.length === 0) {
+    return [-1, 1];
+  }
+
   const minValue = Math.min(...values);
   const maxValue = Math.max(...values);
 
