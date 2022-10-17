@@ -17,15 +17,18 @@ function SidebarLink({ href, children, status = "default" }: SidebarLinkProps) {
   return (
     <Link href={href}>
       <a
-        className={classNames("block px-6 py-2", {
+        className={classNames("flex items-center px-6 py-2", {
           "bg-slate-100 border-l-2 border-slate-800 -ml-[2px]": isActive,
+          "cursor-default opacity-30": status === "coming-soon",
         })}
       >
-        {children}
-        {status !== "default" && (
-          <div className={classNames("bg-gray-100 text-gray-600", {})}>
-            {{ WIP: status === "wip", Soon: status === "coming-soon" }[status]}
-          </div>
+        <span className="whitespace-nowrap text-ellipsis overflow-hidden">
+          {children}
+        </span>
+        {status === "wip" && (
+          <span className="ml-auto bg-yellow-200 text-yellow-700 text-xs px-1 py-px rounded-sm whitespace-nowrap">
+            In progress
+          </span>
         )}
       </a>
     </Link>
@@ -81,20 +84,33 @@ export function Layout({ children, title }) {
             <SidebarLink href="/real-analysis/technical-definition-sequence-convergence">
               Definition of <VocabTerm>convergence</VocabTerm>
             </SidebarLink>
-            <SidebarLink href="/real-analysis/prove-sequence-convergence">
+            <SidebarLink
+              href="/real-analysis/prove-sequence-convergence"
+              status="wip"
+            >
               Proving <VocabTerm>convergence</VocabTerm>
             </SidebarLink>
-            <SidebarLink href="#">
+            <SidebarLink href="#" status="coming-soon">
               Definition of <VocabTerm>divergence</VocabTerm>
             </SidebarLink>
-            <SidebarLink href="#">
+            <SidebarLink href="#" status="coming-soon">
               Proving <VocabTerm>divergence</VocabTerm>
             </SidebarLink>
-            <SidebarLink href="#">Tails and subsequences</SidebarLink>
-            <SidebarLink href="#">Squeeze theorem</SidebarLink>
-            <SidebarLink href="#">Limit arithmetic</SidebarLink>
-            <SidebarLink href="#">Ratio test</SidebarLink>
-            <SidebarLink href="#">Cauchy sequences</SidebarLink>
+            <SidebarLink href="#" status="coming-soon">
+              Tails and subsequences
+            </SidebarLink>
+            <SidebarLink href="#" status="coming-soon">
+              Squeeze theorem
+            </SidebarLink>
+            <SidebarLink href="#" status="coming-soon">
+              Limit arithmetic
+            </SidebarLink>
+            <SidebarLink href="#" status="coming-soon">
+              Ratio test
+            </SidebarLink>
+            <SidebarLink href="#" status="coming-soon">
+              Cauchy sequences
+            </SidebarLink>
           </div>
         </nav>
       </div>
