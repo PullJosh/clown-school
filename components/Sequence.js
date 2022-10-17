@@ -287,6 +287,7 @@ Sequence.Graph = function SequenceGraph({
   const [minY, setMinY] = useState(idealMinY);
   const [maxY, setMaxY] = useState(idealMaxY);
 
+  const currentlyZoomingRef = useRef(false);
   const zoomToIdeal = useCallback(
     (instant = false) => {
       if (instant) {
@@ -295,12 +296,15 @@ Sequence.Graph = function SequenceGraph({
         return;
       }
 
+      currentlyZoomingRef.current = true;
+
       const startTime = Date.now();
       const duration = 400;
       function update() {
         let progress = (Date.now() - startTime) / duration;
         if (progress > 1) {
           progress = 1;
+          currentlyZoomingRef.current = false;
         } else {
           requestAnimationFrame(update);
         }
@@ -349,10 +353,10 @@ Sequence.Graph = function SequenceGraph({
     // When idealMinY and idealMaxY change...
     // If the change is caused by the user scrolling, just wait and animate the transition at the end
     // But if the change is caused by anything else, update instantly:
-    if (timeoutRef.current === null) {
+    if (timeoutRef.current === null && currentlyZoomingRef.current === false) {
       zoomToIdeal(true);
     }
-  }, [idealMinY, idealMaxY, zoomToIdeal]);
+  }, [idealMinY, idealMaxY, zoomToIdeal, timeoutRef, currentlyZoomingRef]);
 
   useEffect(() => {
     if (scrollElem) {
@@ -581,6 +585,110 @@ Sequence.Graph.Points = function SequenceGraphPoints({ pointColor }) {
   );
 };
 
+Sequence.Graph.LimitIndicator = function SequenceGraphLimitIndicator({
+  value,
+  glow = true,
+}) {
+  const { width, height, getScreenY } = useContext(SequenceGraphContext);
+
+  const type =
+    value === Infinity || value === -Infinity ? "diverging" : "converging";
+
+  return (
+    <Sequence.Graph.Layer>
+      {glow && (
+        <defs>
+          {Object.entries({
+            LimitIndicator_gradient_converging: "text-purple-600/30",
+            LimitIndicator_gradient_diverging: "text-teal-600/30",
+          }).map(([id, color]) => (
+            <linearGradient
+              key={id}
+              id={id}
+              x1="0%"
+              y1="0%"
+              x2="0%"
+              y2="100%"
+              className={color}
+            >
+              <stop offset="0%" stopColor="currentColor" stopOpacity={1.0} />
+              <stop offset="50%" stopColor="currentColor" stopOpacity={0.3} />
+              <stop offset="65%" stopColor="currentColor" stopOpacity={0.15} />
+              <stop
+                offset="75.5%"
+                stopColor="currentColor"
+                stopOpacity={0.075}
+              />
+              <stop
+                offset="82.85%"
+                stopColor="currentColor"
+                stopOpacity={0.037}
+              />
+              <stop offset="88%" stopColor="currentColor" stopOpacity={0.019} />
+              <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
+            </linearGradient>
+          ))}
+        </defs>
+      )}
+      {type === "converging" && (
+        <>
+          {glow && (
+            <>
+              <rect
+                x={0}
+                y={0}
+                width={width}
+                height={height * 0.15}
+                transform={`translate(0 ${getScreenY(value)})`}
+                fill="url(#LimitIndicator_gradient_converging)"
+                className="opacity-60"
+              />
+              <rect
+                x={0}
+                y={0}
+                width={width}
+                height={height * 0.15}
+                transform={`translate(0 ${getScreenY(value)}) scale(1 -1)`}
+                fill="url(#LimitIndicator_gradient_converging)"
+                className="opacity-60"
+              />
+            </>
+          )}
+          <line
+            x1={0}
+            x2={width}
+            y1={getScreenY(value)}
+            y2={getScreenY(value)}
+            className="stroke-purple-600/60"
+            strokeWidth={2}
+          />
+        </>
+      )}
+      {value === Infinity && glow && (
+        <rect
+          x={0}
+          y={0}
+          width={width}
+          height={height * 0.4}
+          fill="url(#LimitIndicator_gradient_diverging)"
+          className="opacity-50"
+        />
+      )}
+      {value === -Infinity && glow && (
+        <rect
+          x={0}
+          y={0}
+          width={width}
+          height={height * 0.4}
+          transform={`translate(0 ${height}) scale(1 -1)`}
+          fill="url(#LimitIndicator_gradient_diverging)"
+          className="opacity-50"
+        />
+      )}
+    </Sequence.Graph.Layer>
+  );
+};
+
 Sequence.Graph.BigNLabel = function SequenceGraphBigNLabel({
   N,
   showN = true,
@@ -664,9 +772,7 @@ Sequence.Graph.HighlightPoints = function SequenceGraphHighlightPoints({
 };
 
 function SequenceGraphTubeHandle({ center, radius, side, setRadius }) {
-  const { width, height, getScreenY, minY, maxY } =
-    useContext(SequenceGraphContext);
-
+  const { height, getScreenY, minY, maxY } = useContext(SequenceGraphContext);
   const { scrollElemWidth } = useContext(SequenceContext);
 
   const onMouseDown = useDragAndDrop(radius, (dx, dy, oldRadius) => {

@@ -74,6 +74,7 @@ export default function SequenceConvergeDivergeMeaning() {
               allowScrolling={false}
             >
               <Sequence.Graph fn={(n) => 1 / n} limit={0} height={200}>
+                <Sequence.Graph.LimitIndicator value={0} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -97,6 +98,7 @@ export default function SequenceConvergeDivergeMeaning() {
               allowScrolling={false}
             >
               <Sequence.Graph fn={(n) => (-1) ** n / n} limit={0} height={200}>
+                <Sequence.Graph.LimitIndicator value={0} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -119,6 +121,7 @@ export default function SequenceConvergeDivergeMeaning() {
               allowScrolling={false}
             >
               <Sequence.Graph fn={(n) => 5 + 1 / n} limit={5} height={200}>
+                <Sequence.Graph.LimitIndicator value={5} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -146,6 +149,7 @@ export default function SequenceConvergeDivergeMeaning() {
                 limit={4}
                 height={200}
               >
+                <Sequence.Graph.LimitIndicator value={4} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -170,6 +174,7 @@ export default function SequenceConvergeDivergeMeaning() {
               allowScrolling={false}
             >
               <Sequence.Graph fn={(n) => -3} limit={-3} height={200}>
+                <Sequence.Graph.LimitIndicator value={-3} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -195,6 +200,7 @@ export default function SequenceConvergeDivergeMeaning() {
               allowScrolling={false}
             >
               <Sequence.Graph fn={(n) => Math.min(n, 7)} limit={7} height={200}>
+                <Sequence.Graph.LimitIndicator value={7} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -301,6 +307,7 @@ export default function SequenceConvergeDivergeMeaning() {
               allowScrolling={false}
             >
               <Sequence.Graph fn={(n) => -(n ** 2)} limit={0} height={200}>
+                <Sequence.Graph.LimitIndicator value={-Infinity} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -323,6 +330,7 @@ export default function SequenceConvergeDivergeMeaning() {
               allowScrolling={false}
             >
               <Sequence.Graph fn={(n) => Math.sqrt(n)} limit={0} height={200}>
+                <Sequence.Graph.LimitIndicator value={Infinity} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -349,6 +357,7 @@ export default function SequenceConvergeDivergeMeaning() {
                 limit={0}
                 height={200}
               >
+                <Sequence.Graph.LimitIndicator value={Infinity} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>
@@ -374,6 +383,7 @@ export default function SequenceConvergeDivergeMeaning() {
                 limit={0}
                 height={200}
               >
+                <Sequence.Graph.LimitIndicator value={-Infinity} />
                 <Sequence.Graph.Points />
               </Sequence.Graph>
             </Sequence>

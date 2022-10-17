@@ -83,6 +83,7 @@ export default function TechnicalDefinitionSequenceConvergence() {
           }
         >
           <Sequence.Graph fn={(n) => 1 / n} limit={0}>
+            <Sequence.Graph.LimitIndicator value={0} glow={false} />
             <Sequence.Graph.Tube
               center={0}
               radius={Number(tubeRadius) ?? 0}
@@ -121,7 +122,7 @@ export default function TechnicalDefinitionSequenceConvergence() {
             <div>✅</div>
             <div className="text-lime-800">
               <div>
-                The terms get within ±{tubeRadius} at{" "}
+                The terms get within ±{tubeRadius} starting from{" "}
                 <button
                   onClick={() => {
                     interactiveSequenceRef.current?.scrollToN(

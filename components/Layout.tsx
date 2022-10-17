@@ -1,12 +1,16 @@
-import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { VocabTerm } from "./VocabTerm";
-import { Latex } from "./Latex";
 
-function SidebarLink({ href, children }) {
+interface SidebarLinkProps {
+  href: string;
+  children: React.ReactNode;
+  status?: "default" | "wip" | "coming-soon";
+}
+
+function SidebarLink({ href, children, status = "default" }: SidebarLinkProps) {
   const router = useRouter();
   const isActive = router.pathname === href;
 
@@ -18,6 +22,11 @@ function SidebarLink({ href, children }) {
         })}
       >
         {children}
+        {status !== "default" && (
+          <div className={classNames("bg-gray-100 text-gray-600", {})}>
+            {{ WIP: status === "wip", Soon: status === "coming-soon" }[status]}
+          </div>
+        )}
       </a>
     </Link>
   );
@@ -44,7 +53,7 @@ export function Layout({ children, title }) {
             </text>
           </svg>
           <h1 className="font-semibold text-2xl">
-            <span className="text-rose-700">Clown</span>.school
+            <span className="text-rose-700">Clown</span> school
           </h1>
         </div>
         <nav className="relative flex-1 overflow-hidden">
@@ -90,7 +99,7 @@ export function Layout({ children, title }) {
         </nav>
       </div>
       <main>
-        {/* <div className="sticky top-0 bg-white z-40">
+        <div className="sticky top-0 bg-white z-40">
           <header className="border-b border-slate-200">
             <div className="h-16 px-24 flex items-center">
               <form
@@ -133,7 +142,7 @@ export function Layout({ children, title }) {
               </form>
             </div>
           </header>
-        </div> */}
+        </div>
         <div className="px-24">
           <div className="prose prose-slate py-12 relative">
             <h1>{title}</h1>

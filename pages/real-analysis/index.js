@@ -27,30 +27,6 @@ export default function WhatIsRealAnalysis() {
         <em>real analysis</em>.
       </p>
       <p>This may sound like serious business. It's not.</p>
-      <h2>Analysis is child's play</h2>
-      <p>
-        If you've ever observed a child, you know that they are strange little
-        creatures. A newborn child is quite the monster, and taming them takes
-        years.
-      </p>
-      <p>
-        About 2-4 years in, a funny thing happens: they start asking questions.
-        Lots of questions.
-      </p>
-      <p>
-        Their favorite questions are the ones that make you want to bash your
-        head in.
-      </p>
-      <div className="no-prose max-w-xs mx-auto">
-        <TextConversation>
-          <TextMessageGroup person="other">
-            <TextMessage>What is the biggest number?</TextMessage>
-          </TextMessageGroup>
-          <TextMessageGroup person="self">
-            <TextMessage>Naturally</TextMessage>
-          </TextMessageGroup>
-        </TextConversation>
-      </div>
       <h2>What are the main ideas of real analysis?</h2>
       <p>
         Analysis deals a lot with infinity and its associated funny business.
