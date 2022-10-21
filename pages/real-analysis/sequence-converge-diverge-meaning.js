@@ -53,7 +53,7 @@ export default function SequenceConvergeDivergeMeaning() {
           and essentially become a horizontal line as{" "}
           <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} /> gets large.
           (We'll give{" "}
-          <Link href="/real-analysis/prove-sequence-convergence">
+          <Link href="/real-analysis/technical-definition-sequence-convergence">
             <a>a more technical definition</a>
           </Link>{" "}
           soon.)
