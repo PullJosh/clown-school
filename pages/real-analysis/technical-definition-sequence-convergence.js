@@ -292,6 +292,10 @@ export default function TechnicalDefinitionSequenceConvergence() {
           ("epsilon")
         </li>
         <li>
+          Call the tube center point <Latex value={String.raw`L`} />. (This is
+          the value we <em>think</em> the sequence is converging to.)
+        </li>
+        <li>
           Call the point where the terms enter the tube{" "}
           <Latex value={String.raw`\textcolor{#1d4ed8}{N}`} /> ("big n")
         </li>
