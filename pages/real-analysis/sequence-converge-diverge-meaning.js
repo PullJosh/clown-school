@@ -41,7 +41,7 @@ export default function SequenceConvergeDivergeMeaning() {
         and begin to prove, rigorously, that sequences converge or diverge.
       </p>
       <div className="relative pt-px">
-        <div className="absolute top-0 left-1/2 ml-[-50vw] -z-50 w-screen h-1/2 bg-gradient-to-b from-purple-50" />
+        <div className="absolute top-0 left-1/2 ml-[-50vw] -z-50 w-[1000%] h-1/2 bg-gradient-to-b from-purple-50" />
         <h2>
           What does <VocabTerm>convergent</VocabTerm> mean?
         </h2>
@@ -281,7 +281,7 @@ export default function SequenceConvergeDivergeMeaning() {
       </div>
 
       <div className="relative pt-px">
-        <div className="absolute top-0 left-1/2 ml-[-50vw] -z-50 w-screen h-1/2 bg-gradient-to-b from-green-50" />
+        <div className="absolute top-0 left-1/2 ml-[-50vw] -z-50 w-[1000%] h-1/2 bg-gradient-to-b from-green-50" />
         <h2>
           What does <VocabTerm>divergent</VocabTerm> mean?
         </h2>
