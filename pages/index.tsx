@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="max-w-xl mx-auto py-16 space-y-3">
-      <h1 className="font-bold text-3xl">Hello! Welcome to Clown School.</h1>
+      <h1 className="font-bold text-3xl">🤡 Hello! Welcome to Clown School.</h1>
       <p>You can learn about...</p>
       <ul className="list-disc list-inside pl-4">
         <li>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { VocabTerm } from "./VocabTerm";
+import { useState } from "react";
 
 interface SidebarLinkProps {
   href: string;
@@ -36,33 +37,161 @@ function SidebarLink({ href, children, status = "default" }: SidebarLinkProps) {
 }
 
 export function Layout({ children, title }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="pl-[300px]">
+    <div className="w-screen h-screen overflow-hidden grid grid-rows-[auto,auto,1fr] grid-cols-[1fr] lg:grid-rows-[auto,1fr] lg:grid-cols-[300px,1fr]">
       <Head>
         {title && <title>{jsxToString(title)} | Clown School</title>}
         {!title && <title>Clown School</title>}
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div className="fixed top-0 left-0 h-screen w-[300px] flex flex-col bg-white border-r border-slate-200">
-        <div className="bg-white border-b border-slate-200 flex items-center space-x-4">
-          <svg viewBox="0 0 64 64" className="w-16 h-16">
-            <text
-              x={33}
-              y={36}
-              fontSize={36}
-              textAnchor="middle"
-              dominantBaseline="middle"
-            >
-              🤡
-            </text>
+      <div className="flex bg-white border-b lg:border-r border-slate-200">
+        <Link href="/">
+          <a className="flex-grow flex items-center space-x-4">
+            <svg viewBox="0 0 64 64" className="w-16 h-16">
+              <text
+                x={33}
+                y={36}
+                fontSize={36}
+                textAnchor="middle"
+                dominantBaseline="middle"
+              >
+                🤡
+              </text>
+            </svg>
+            <h1 className="font-semibold text-2xl">
+              <span className="text-rose-700">Clown</span> school
+            </h1>
+          </a>
+        </Link>
+        <button
+          className="flex items-center justify-center w-16 h-16 lg:hidden"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className="w-6 h-6 text-slate-600"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M3 12h18M3 6h18M3 18h18" />
           </svg>
-          <h1 className="font-semibold text-2xl">
-            <span className="text-rose-700">Clown</span> school
-          </h1>
+        </button>
+      </div>
+      <div className="hidden lg:flex border-b border-slate-200 items-center px-24">
+        <form
+          action="https://google.com/search"
+          className="flex-1 max-w-prose flex bg-slate-100 rounded focus-within:bg-slate-200"
+        >
+          <input
+            type="hidden"
+            name="as_sitesearch"
+            value="clown-school.vercel.app"
+          />
+          <input
+            type="text"
+            name="q"
+            placeholder="Search..."
+            className="w-full px-4 py-2 bg-transparent rounded focus:outline-none"
+            required
+          />
+          <button type="submit">
+            <svg viewBox="0 0 40 40" className="w-10 h-10">
+              <circle
+                cx={17}
+                cy={17}
+                r={7}
+                strokeWidth={2}
+                className="stroke-slate-500"
+                fill="none"
+              />
+              <line
+                x1={22}
+                x2={29}
+                y1={22}
+                y2={29}
+                strokeWidth={2}
+                className="stroke-slate-500"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </form>
+      </div>
+      <div
+        className={classNames(
+          "bg-white fixed z-50 inset-0 w-full h-full lg:static lg:w-auto lg:h-auto overflow-hidden lg:flex flex-col lg:border-r lg:border-slate-200",
+          {
+            flex: sidebarOpen,
+            hidden: !sidebarOpen,
+          }
+        )}
+      >
+        {/* `relative` for this <div> makes it appear on top of the shadow of the <h2> below (so it's not ugly) */}
+        <div className="flex bg-white border-b border-slate-200 relative z-10 lg:hidden">
+          <div className="flex-grow h-16 flex items-center pl-3">
+            <form
+              action="https://google.com/search"
+              className="flex-1 max-w-prose flex bg-slate-100 rounded focus-within:bg-slate-200"
+            >
+              <input
+                type="hidden"
+                name="as_sitesearch"
+                value="clown-school.vercel.app"
+              />
+              <input
+                type="text"
+                name="q"
+                placeholder="Search..."
+                className="w-full px-4 py-2 bg-transparent rounded focus:outline-none"
+                required
+              />
+              <button type="submit">
+                <svg viewBox="0 0 40 40" className="w-10 h-10">
+                  <circle
+                    cx={17}
+                    cy={17}
+                    r={7}
+                    strokeWidth={2}
+                    className="stroke-slate-500"
+                    fill="none"
+                  />
+                  <line
+                    x1={22}
+                    x2={29}
+                    y1={22}
+                    y2={29}
+                    strokeWidth={2}
+                    className="stroke-slate-500"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            </form>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center justify-center w-16 h-16"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="w-6 h-6 text-slate-600"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <nav className="relative flex-1 overflow-hidden">
-          <h1 className="px-6 py-2 bg-white shadow font-bold mb-4">
-            Real Analysis
-          </h1>
+        <h2 className="px-6 py-2 bg-white shadow font-bold relative">
+          Real Analysis
+        </h2>
+        <div className="overflow-y-auto py-4">
           <SidebarLink href="/real-analysis">
             What is real analysis?
           </SidebarLink>
@@ -76,11 +205,6 @@ export function Layout({ children, title }) {
               <VocabTerm>Convergence</VocabTerm> and{" "}
               <VocabTerm>divergence</VocabTerm>
             </SidebarLink>
-            {/* <img
-            src="/inflatable-tube-man.png"
-            alt=""
-            className="absolute w-14 -right-4 -rotate-45 pointer-events-none select-none"
-          /> */}
             <SidebarLink href="/real-analysis/technical-definition-sequence-convergence">
               Definition of <VocabTerm>convergence</VocabTerm>
             </SidebarLink>
@@ -112,60 +236,14 @@ export function Layout({ children, title }) {
               Cauchy sequences
             </SidebarLink>
           </div>
-        </nav>
+        </div>
       </div>
-      <main>
-        <div className="sticky top-0 bg-white z-40">
-          <header className="border-b border-slate-200">
-            <div className="h-16 px-24 flex items-center">
-              <form
-                action="https://google.com/search"
-                className="flex-1 max-w-prose flex bg-slate-100 rounded focus-within:bg-slate-200"
-              >
-                <input
-                  type="hidden"
-                  name="as_sitesearch"
-                  value="clown-school.vercel.app"
-                />
-                <input
-                  type="text"
-                  name="q"
-                  placeholder="Search..."
-                  className="w-full px-4 py-2 bg-transparent rounded focus:outline-none"
-                  required
-                />
-                <button type="submit">
-                  <svg viewBox="0 0 40 40" className="w-10 h-10">
-                    <circle
-                      cx={17}
-                      cy={17}
-                      r={7}
-                      strokeWidth={2}
-                      className="stroke-slate-500"
-                      fill="none"
-                    />
-                    <line
-                      x1={22}
-                      x2={29}
-                      y1={22}
-                      y2={29}
-                      strokeWidth={2}
-                      className="stroke-slate-500"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </button>
-              </form>
-            </div>
-          </header>
+      <div className="overflow-y-auto px-16 lg:px-24">
+        <div className="prose prose-slate py-12 relative">
+          <h1>{title}</h1>
+          {children}
         </div>
-        <div className="px-24">
-          <div className="prose prose-slate py-12 relative">
-            <h1>{title}</h1>
-            {children}
-          </div>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
