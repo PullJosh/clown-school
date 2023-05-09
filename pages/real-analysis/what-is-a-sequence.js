@@ -220,7 +220,7 @@ export default function WhatIsASequence() {
         If you had to classify these sequences into categories, how might you
         divide them up? (In{" "}
         <Link href="/real-analysis/sequence-converge-diverge-meaning">
-          <a>the next section</a>
+          the next section
         </Link>
         , we will discuss one way that mathematicians classify sequences.)
       </p>

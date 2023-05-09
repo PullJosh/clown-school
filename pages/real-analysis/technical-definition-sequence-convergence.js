@@ -32,7 +32,7 @@ export default function TechnicalDefinitionSequenceConvergence() {
       <p>
         In{" "}
         <Link href="/real-analysis/sequence-converge-diverge-meaning">
-          <a>the last lesson</a>
+          the last lesson
         </Link>{" "}
         we said that a sequence <VocabTerm bold>converges</VocabTerm> if its
         terms get "infinitely close" to some limit value. But what exactly does
@@ -572,7 +572,7 @@ export default function TechnicalDefinitionSequenceConvergence() {
       <p>
         In{" "}
         <Link href="/real-analysis/prove-sequence-convergence">
-          <a>the next lesson</a>
+          the next lesson
         </Link>
         , we'll use this definition to prove that a specific sequence is
         convergent.

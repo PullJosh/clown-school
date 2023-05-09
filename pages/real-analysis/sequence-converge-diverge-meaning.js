@@ -35,7 +35,7 @@ export default function SequenceConvergeDivergeMeaning() {
         <VocabTerm bold>convergence</VocabTerm> (and its opposite,{" "}
         <VocabTerm bold>divergence</VocabTerm>) by looking at examples. In{" "}
         <Link href="/real-analysis/technical-definition-sequence-convergence">
-          <a>the next lesson</a>
+          the next lesson
         </Link>
         , we will write a more precise mathematical definition of convergence
         and begin to prove, rigorously, that sequences converge or diverge.
@@ -54,7 +54,7 @@ export default function SequenceConvergeDivergeMeaning() {
           <Latex value={String.raw`\textcolor{#1d4ed8}{n}`} /> gets large.
           (We'll give{" "}
           <Link href="/real-analysis/technical-definition-sequence-convergence">
-            <a>a more technical definition</a>
+            a more technical definition
           </Link>{" "}
           soon.)
         </p>

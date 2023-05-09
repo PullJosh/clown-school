@@ -1,6 +1,8 @@
+"use client";
+
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import classNames from "classnames";
 import { VocabTerm } from "./VocabTerm";
 import { useState } from "react";
@@ -11,32 +13,49 @@ interface SidebarLinkProps {
   status?: "default" | "wip" | "coming-soon";
 }
 
-function SidebarLink({ href, children, status = "default" }: SidebarLinkProps) {
-  const router = useRouter();
-  const isActive = router.pathname === href;
+export function SidebarLink({
+  href,
+  children,
+  status = "default",
+}: SidebarLinkProps) {
+  const isActive = usePathname() === href;
 
   return (
-    <Link href={href}>
-      <a
-        className={classNames("flex items-center px-6 py-2", {
-          "bg-slate-100 border-l-2 border-slate-800 -ml-[2px]": isActive,
-          "cursor-default opacity-30": status === "coming-soon",
-        })}
-      >
-        <span className="whitespace-nowrap text-ellipsis overflow-hidden">
-          {children}
+    <Link
+      href={href}
+      className={classNames("flex items-center px-6 py-2", {
+        "bg-slate-100 border-l-2 border-slate-800 -ml-[2px]": isActive,
+        "cursor-default opacity-30": status === "coming-soon",
+      })}
+    >
+      <span className="whitespace-nowrap text-ellipsis overflow-hidden">
+        {children}
+      </span>
+      {status === "wip" && (
+        <span className="ml-auto bg-yellow-200 text-yellow-700 text-xs px-1 py-px rounded-sm whitespace-nowrap">
+          In progress
         </span>
-        {status === "wip" && (
-          <span className="ml-auto bg-yellow-200 text-yellow-700 text-xs px-1 py-px rounded-sm whitespace-nowrap">
-            In progress
-          </span>
-        )}
-      </a>
+      )}
     </Link>
   );
 }
 
-export function Layout({ children, title }) {
+interface LayoutProps {
+  children: React.ReactNode;
+
+  /** The page title. Should only be used in /pages, not /app */
+  title?: React.ReactNode;
+
+  sidebarHeader?: string;
+  sidebarContent?: React.ReactNode;
+}
+
+export function Layout({
+  children,
+  title,
+  sidebarHeader = "Real Analysis",
+  sidebarContent = realAnalysisSidebarContent,
+}: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -47,23 +66,21 @@ export function Layout({ children, title }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className="flex bg-white border-b lg:border-r border-slate-200">
-        <Link href="/">
-          <a className="flex-grow flex items-center space-x-4">
-            <svg viewBox="0 0 64 64" className="w-16 h-16">
-              <text
-                x={33}
-                y={36}
-                fontSize={36}
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                🤡
-              </text>
-            </svg>
-            <h1 className="font-semibold text-2xl">
-              <span className="text-rose-700">Clown</span> school
-            </h1>
-          </a>
+        <Link href="/" className="flex-grow flex items-center space-x-4">
+          <svg viewBox="0 0 64 64" className="w-16 h-16">
+            <text
+              x={33}
+              y={36}
+              fontSize={36}
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              🤡
+            </text>
+          </svg>
+          <h1 className="font-semibold text-2xl">
+            <span className="text-rose-700">Clown</span> school
+          </h1>
         </Link>
         <button
           className="flex items-center justify-center w-16 h-16 lg:hidden"
@@ -189,64 +206,65 @@ export function Layout({ children, title }) {
           </button>
         </div>
         <h2 className="px-6 py-2 bg-white shadow font-bold relative">
-          Real Analysis
+          {sidebarHeader}
         </h2>
-        <div className="overflow-y-auto py-4">
-          <SidebarLink href="/real-analysis">
-            What is real analysis?
-          </SidebarLink>
-
-          <h2 className="px-6 py-2 font-bold text-slate-800">Sequences</h2>
-          <div className="ml-6 border-l-2 border-slate-200">
-            <SidebarLink href="/real-analysis/what-is-a-sequence">
-              What is a sequence?
-            </SidebarLink>
-            <SidebarLink href="/real-analysis/sequence-converge-diverge-meaning">
-              <VocabTerm>Convergence</VocabTerm> and{" "}
-              <VocabTerm>divergence</VocabTerm>
-            </SidebarLink>
-            <SidebarLink href="/real-analysis/technical-definition-sequence-convergence">
-              Definition of <VocabTerm>convergence</VocabTerm>
-            </SidebarLink>
-            <SidebarLink
-              href="/real-analysis/prove-sequence-convergence"
-              status="wip"
-            >
-              Proving <VocabTerm>convergence</VocabTerm>
-            </SidebarLink>
-            <SidebarLink href="#" status="coming-soon">
-              Definition of <VocabTerm>divergence</VocabTerm>
-            </SidebarLink>
-            <SidebarLink href="#" status="coming-soon">
-              Proving <VocabTerm>divergence</VocabTerm>
-            </SidebarLink>
-            <SidebarLink href="#" status="coming-soon">
-              Tails and subsequences
-            </SidebarLink>
-            <SidebarLink href="#" status="coming-soon">
-              Squeeze theorem
-            </SidebarLink>
-            <SidebarLink href="#" status="coming-soon">
-              Limit arithmetic
-            </SidebarLink>
-            <SidebarLink href="#" status="coming-soon">
-              Ratio test
-            </SidebarLink>
-            <SidebarLink href="#" status="coming-soon">
-              Cauchy sequences
-            </SidebarLink>
-          </div>
-        </div>
+        <div className="overflow-y-auto py-4">{sidebarContent}</div>
       </div>
       <div className="overflow-y-auto px-16 lg:px-24">
         <div className="prose prose-slate py-12 relative">
-          <h1>{title}</h1>
+          {title && <h1>{title}</h1>}
           {children}
         </div>
       </div>
     </div>
   );
 }
+
+const realAnalysisSidebarContent = (
+  <>
+    <SidebarLink href="/real-analysis">What is real analysis?</SidebarLink>
+
+    <h2 className="px-6 py-2 font-bold text-slate-800">Sequences</h2>
+    <div className="ml-6 border-l-2 border-slate-200">
+      <SidebarLink href="/real-analysis/what-is-a-sequence">
+        What is a sequence?
+      </SidebarLink>
+      <SidebarLink href="/real-analysis/sequence-converge-diverge-meaning">
+        <VocabTerm>Convergence</VocabTerm> and <VocabTerm>divergence</VocabTerm>
+      </SidebarLink>
+      <SidebarLink href="/real-analysis/technical-definition-sequence-convergence">
+        Definition of <VocabTerm>convergence</VocabTerm>
+      </SidebarLink>
+      <SidebarLink
+        href="/real-analysis/prove-sequence-convergence"
+        status="wip"
+      >
+        Proving <VocabTerm>convergence</VocabTerm>
+      </SidebarLink>
+      <SidebarLink href="#" status="coming-soon">
+        Definition of <VocabTerm>divergence</VocabTerm>
+      </SidebarLink>
+      <SidebarLink href="#" status="coming-soon">
+        Proving <VocabTerm>divergence</VocabTerm>
+      </SidebarLink>
+      <SidebarLink href="#" status="coming-soon">
+        Tails and subsequences
+      </SidebarLink>
+      <SidebarLink href="#" status="coming-soon">
+        Squeeze theorem
+      </SidebarLink>
+      <SidebarLink href="#" status="coming-soon">
+        Limit arithmetic
+      </SidebarLink>
+      <SidebarLink href="#" status="coming-soon">
+        Ratio test
+      </SidebarLink>
+      <SidebarLink href="#" status="coming-soon">
+        Cauchy sequences
+      </SidebarLink>
+    </div>
+  </>
+);
 
 function jsxToString(jsx) {
   if (Array.isArray(jsx)) {

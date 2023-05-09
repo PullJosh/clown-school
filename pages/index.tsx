@@ -7,8 +7,18 @@ export default function Home() {
       <p>You can learn about...</p>
       <ul className="list-disc list-inside pl-4">
         <li>
-          <Link href="/real-analysis">
-            <a className="underline">Real Analysis</a>
+          <Link href="/algebra" className="underline">
+            Algebra
+          </Link>
+        </li>
+        <li>
+          <Link href="/calculus" className="underline">
+            Calculus
+          </Link>
+        </li>
+        <li>
+          <Link href="/real-analysis" className="underline">
+            Real Analysis
           </Link>
         </li>
       </ul>
