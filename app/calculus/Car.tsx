@@ -1,5 +1,5 @@
 import Image from "next/image";
-import CarImage from "./Car.png";
+import CarImage from "./car.png";
 import WheelImage from "./wheel.svg";
 import { useCallback, useEffect, useRef } from "react";
 

@@ -628,7 +628,7 @@ export default function RiemannSums() {
         {Number(guess) !== 0 && !isNaN(Number(guess)) && (
           <>
             That's{" "}
-            {83.178 > guess
+            {83.178 > parseFloat(guess)
               ? `${Math.round((83.178 / Number(guess) - 1) * 100)}% larger`
               : `${Math.round(
                   (1 - 83.178 / Number(guess)) * 100
