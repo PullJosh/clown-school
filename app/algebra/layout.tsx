@@ -19,6 +19,10 @@ export default function AlgebraLayout({ children }: AlgebraLayoutProps) {
           <SidebarLink href="/algebra/numbers-in-other-bases">
             Numbers in Other Bases
           </SidebarLink>
+
+          <SidebarLink href="/algebra/matrix-multiplication">
+            Matrix Multiplication
+          </SidebarLink>
         </>
       }
     >
