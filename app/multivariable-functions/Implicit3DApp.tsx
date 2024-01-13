@@ -47,7 +47,7 @@ import { ComputeEngine } from "@cortex-js/compute-engine";
 import { mathToWGSL } from "./mathToWGSL";
 const ce = new ComputeEngine();
 
-(window as any).ce = ce;
+// (window as any).ce = ce;
 
 // const clearScreenShader = wgsl`
 //   @link fn getTexture(uv: vec2<f32>) -> vec4<f32> {}
