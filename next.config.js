@@ -27,6 +27,8 @@ const nextConfig = {
       ],
     });
 
+    config.optimization.moduleIds = "named";
+
     return config;
   },
 };
