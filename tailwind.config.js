@@ -11,6 +11,7 @@ module.exports = {
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
         math: ["KaTeX_Main", ...defaultTheme.fontFamily.sans],
+        headline: ["var(--font-literata)", "serif"],
       },
     },
   },

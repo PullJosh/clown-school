@@ -2,10 +2,10 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="max-w-xl mx-auto py-16 space-y-3">
-      <h1 className="font-bold text-3xl">🤡 Hello! Welcome to Clown School.</h1>
+    <div className="mx-auto max-w-xl space-y-3 py-16">
+      <h1 className="text-3xl font-bold">🤡 Hello! Welcome to Clown School.</h1>
       <p>You can learn about...</p>
-      <ul className="list-disc list-inside pl-4">
+      <ul className="list-inside list-disc pl-4">
         <li>
           <Link href="/algebra" className="underline">
             Algebra
@@ -14,6 +14,11 @@ export default function Home() {
         <li>
           <Link href="/calculus" className="underline">
             Calculus
+          </Link>
+        </li>
+        <li>
+          <Link href="/multivariable-functions" className="underline">
+            Multivariable Functions
           </Link>
         </li>
         <li>

@@ -1,0 +1,17 @@
+body {
+  @apply bg-stone-100;
+}
+
+html {
+  scroll-timeline: --page-scroll block;
+}
+
+@keyframes grow-progress {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
