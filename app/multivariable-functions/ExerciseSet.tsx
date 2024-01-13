@@ -65,7 +65,7 @@ export function ExerciseSet({ children }: ExerciseSetProps) {
     }
   }, [animating]);
 
-  const maxUnlocked = correct.findLastIndex((c) => c === true) + 1;
+  const maxUnlocked = correct.lastIndexOf(true) + 1;
 
   return (
     <div className="relative">
